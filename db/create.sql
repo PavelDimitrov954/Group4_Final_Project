@@ -16,15 +16,15 @@ CREATE TABLE roles
 (   role_id         INT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(20)         NOT NULL
 
-   );
+);
 
 
 CREATE TABLE roles_users
 (
     user_id INT ,
     role_id INT ,
-        FOREIGN KEY (user_id) REFERENCES users (user_id),
-        FOREIGN KEY (role_id) REFERENCES roles (role_id)
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (role_id) REFERENCES roles (role_id)
 
 );
 

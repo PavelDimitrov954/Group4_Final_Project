@@ -8,7 +8,10 @@ public interface CourseService {
     Course getById(int id);
 
     List<Course> getAllCourses();
+
     Course createCourse(Course course);
-    Course update(int id, Course courseUpdate) ;
+
+    Course update(int id, Course courseUpdate);
+
     void delete(int id);
 }

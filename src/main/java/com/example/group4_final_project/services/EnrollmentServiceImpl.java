@@ -34,8 +34,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Transactional
     public Enrollment createEnrollment(Enrollment enrollment) {
         //validating student and user:
-        User student = userRepository.getUserById(enrollment.getStudent().getId());
-        Course course = courseRepository.getReferenceById(enrollment.getCourse().getId());
+        userRepository.findById(enrollment.getStudent().getId()).orElseThrow(() -> new EntityNotFoundException("Student", enrollment.getStudent().getId()));
+        courseRepository.findById(enrollment.getCourse().getId()).orElseThrow(() -> new EntityNotFoundException("Course", enrollment.getCourse().getId()));
 
         return enrollmentRepository.save(enrollment);
     }
@@ -55,7 +55,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Transactional
     public Enrollment updateEnrollment(int id, Enrollment enrollmentDetails) {
         Enrollment existingEnrollment = getEnrollmentById(id);
-        // Update only the necessary fields and perform null checks
+
         if (enrollmentDetails.getCourse() != null) {
             existingEnrollment.setCourse(enrollmentDetails.getCourse());
         }
@@ -72,7 +72,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollmentRepository.delete(enrollment);
     }
 
-    // Additional private methods for validations can be added here
     @Override
     @Transactional
     public Enrollment enrollStudentInCourse(int studentId, int courseId) {
@@ -85,7 +84,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollment.setStudent(student);
         enrollment.setCourse(course);
         enrollment.setEnrolledAt(Timestamp.from(Instant.now()));
-        // Set other properties of Enrollment if needed
 
         return enrollmentRepository.save(enrollment);
     }

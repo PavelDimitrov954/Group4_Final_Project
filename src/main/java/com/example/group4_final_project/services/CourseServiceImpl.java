@@ -60,8 +60,6 @@ public class CourseServiceImpl implements CourseService {
     public Course update(int id, Course courseUpdate) {
         Course existingCourse = getById(id);
 
-//        BeanUtils.copyProperties(courseUpdate, existingCourse, );
-
         existingCourse.setStatus(courseUpdate.getStatus());
         existingCourse.setEnrollments(courseUpdate.getEnrollments());
         existingCourse.setTopic(courseUpdate.getTopic());

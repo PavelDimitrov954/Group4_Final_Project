@@ -18,11 +18,8 @@ public class Assignment {
     private int id;
 
     @ManyToOne
-    @JoinTable(
-            name = "lectures",
-            joinColumns = @JoinColumn(name = "lecture_id")
-    )
-    private Lecture lecture; // Assuming there's a Lecture entity
+    @JoinColumn(name = "lecture_id", nullable = false)
+    private Lecture lecture;
 
     @Column(nullable = false)
     private String title;

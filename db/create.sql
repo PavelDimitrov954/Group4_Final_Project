@@ -59,7 +59,6 @@ CREATE TABLE lectures
     title       VARCHAR(50) NOT NULL,
     description TEXT,
     video_link  TEXT,
-    status      VARCHAR(50) NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (course_id) REFERENCES courses (course_id)

@@ -1,5 +1,6 @@
 package com.example.group4_final_project.models;
 
+import com.example.group4_final_project.models.Lecture.Lecture;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;

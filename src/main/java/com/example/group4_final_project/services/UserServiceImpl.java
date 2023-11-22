@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
         if(user.getRoleName().equals(TEACHER_ROLE_NAME)){
             role =  roleService.findByName(UNAPPROVED_TEACHER_ROLE_NAME);
 
+
         } else{
             role = roleService.findByName(user.getRoleName());
         }

@@ -1,5 +1,6 @@
-package com.example.group4_final_project.models;
+package com.example.group4_final_project.models.Lecture;
 
+import com.example.group4_final_project.models.Course;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class LectureDto {
+    private Integer courseId;
     private String title;
     private String description;
     private String videoLink;

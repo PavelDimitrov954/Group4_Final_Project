@@ -2,6 +2,7 @@ package com.example.group4_final_project.models.Lecture;
 
 import com.example.group4_final_project.models.Course;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,7 +21,7 @@ public class Lecture {
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
-    @NonNull
+    @NotNull
     private Course course;
 
     @Column(nullable = false, length = 50)
@@ -31,9 +32,6 @@ public class Lecture {
 
     @Column(name = "video_link")
     private String videoLink;
-
-    @Column(nullable = false, length = 50)
-    private String status;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

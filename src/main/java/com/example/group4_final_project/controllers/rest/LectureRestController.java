@@ -1,5 +1,6 @@
 package com.example.group4_final_project.controllers.rest;
 
+import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.models.FilterOptionsLecture;
 import com.example.group4_final_project.models.Lecture.LectureDto;
 import com.example.group4_final_project.services.LectureService;
@@ -11,14 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lectures")
+@RequestMapping("/api/lectures")
 public class LectureRestController {
 
     private final LectureService lectureService;
+    private final AuthenticationHelper authenticationHelper;
+
 
     @Autowired
-    public LectureRestController(LectureService lectureService) {
+    public LectureRestController(LectureService lectureService, AuthenticationHelper authenticationHelper) {
         this.lectureService = lectureService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @GetMapping("/search")
@@ -34,27 +38,36 @@ public class LectureRestController {
     }
 
     @PostMapping
-    public ResponseEntity<LectureDto> createLecture(@RequestBody LectureDto lectureDto) {
+    public ResponseEntity<LectureDto> createLecture(@RequestHeader HttpHeaders headers,
+                                                    @RequestBody LectureDto lectureDto) {
+        authenticationHelper.tryGetUser(headers);
         return ResponseEntity.ok(lectureService.createLecture(lectureDto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LectureDto> getLectureById(@PathVariable Integer id) {
+    public ResponseEntity<LectureDto> getLectureById(@RequestHeader HttpHeaders headers,@PathVariable Integer id) {
+        authenticationHelper.tryGetUser(headers);
         return ResponseEntity.ok(lectureService.getLectureById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<LectureDto>> getAllLectures() {
+    public ResponseEntity<List<LectureDto>> getAllLectures(@RequestHeader HttpHeaders headers) {
+        authenticationHelper.tryGetUser(headers);
         return ResponseEntity.ok(lectureService.getAllLectures());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LectureDto> updateLecture(@PathVariable Integer id, @RequestBody LectureDto lectureDto) {
+    public ResponseEntity<LectureDto> updateLecture(@RequestHeader HttpHeaders headers,
+                                                    @PathVariable Integer id,
+                                                    @RequestBody LectureDto lectureDto) {
+        authenticationHelper.tryGetUser(headers);
         return ResponseEntity.ok(lectureService.updateLecture(id, lectureDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLecture(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteLecture(@RequestHeader HttpHeaders headers,
+                                              @PathVariable Integer id) {
+        authenticationHelper.tryGetUser(headers);
         lectureService.deleteLecture(id);
         return ResponseEntity.ok().build();
     }

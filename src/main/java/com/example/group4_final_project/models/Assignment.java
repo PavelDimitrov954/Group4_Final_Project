@@ -30,6 +30,9 @@ public class Assignment {
     @Column(nullable = false, updatable = false, insertable = false)
     private Timestamp createdAt;
 
+
+
+
     //TODO Should modified_at be added as field?
     public Assignment(int id,
                       Lecture lecture,

@@ -1,11 +1,12 @@
 package com.example.group4_final_project.helpers;
 
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
-import com.example.group4_final_project.models.ResponseUserDto;
+import com.example.group4_final_project.models.ResponseUser;
 import com.example.group4_final_project.models.User;
 import com.example.group4_final_project.models.UserRegisterDto;
 import com.example.group4_final_project.models.UserUpdateDto;
 import com.example.group4_final_project.repositories.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -17,23 +18,33 @@ public class UserMapper {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
 
-
-
-@Autowired
-    public UserMapper(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public UserMapper(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
+    }
+
+    public User fromDto(UserUpdateDto userUpdateDto) {
+
+        User user = userRepository.findById(1)
+                .orElseThrow(() -> new EntityNotFoundException("User", 1));
+        User updateUser = modelMapper.map(userUpdateDto, User.class);
+        updateUser.setId(user.getId());
 
 
-    this.passwordEncoder = passwordEncoder;
-}
+     return updateUser;
+
+    }
 
     public User fromDto(UserRegisterDto userRegisterDto) {
 
+
         User user = new User();
         user.setEmail(userRegisterDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         user.setFirstName(userRegisterDto.getFirstName());
         user.setLastName(userRegisterDto.getLastName());
         user.setCreatedAt(Instant.now());
@@ -43,21 +54,18 @@ public class UserMapper {
     }
 
 
-
     public User fromDto(int id, UserUpdateDto userUpdateDto) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
-
-        user.setPassword(userUpdateDto.getPassword());
         user.setFirstName(userUpdateDto.getFirstName());
         user.setLastName(userUpdateDto.getLastName());
         user.setUpdatedAt(Instant.now());
         return user;
     }
 
-    public ResponseUserDto fromUser(User user) {
+    public ResponseUser fromUser(User user) {
 
-        ResponseUserDto responseUserDto = new ResponseUserDto();
+        ResponseUser responseUserDto = new ResponseUser();
         responseUserDto.setFirstName(user.getFirstName());
         responseUserDto.setLastName(user.getLastName());
         responseUserDto.setEmail(user.getEmail());

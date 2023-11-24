@@ -2,22 +2,21 @@ package com.example.group4_final_project.services;
 
 import com.example.group4_final_project.models.*;
 import org.apache.tomcat.websocket.AuthenticationException;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
-    User getByEmil(String email);
-
-    User get(int id, User user);
-    List<User> get(FilterOptionsUser filterOptionsUser);
-
-    ResponseUserDto register(UserRegisterDto user);
-
-    ResponseUserDto update(User user, int id, UserUpdateDto userRegisterDto);
-
-    ResponseUserDto delete(int id, User user) throws AuthenticationException;
 
 
+    ResponseUser get(int id, User user);
+    Page<User> get(FilterOptionsUser filterOptionsUser, Pageable pageable);
+
+    ResponseUser register(UserRegisterDto user);
+
+    ResponseUser update(User user, int id, UserUpdateDto userRegisterDto);
+
+    ResponseUser delete(int id, User user) throws AuthenticationException;
 
 
+    void enrollCourse(User user, int id);
 }

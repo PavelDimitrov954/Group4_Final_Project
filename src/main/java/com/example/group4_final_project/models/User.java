@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -27,10 +28,12 @@ public class User {
 
 
     @NotNull
+    @Length(min = 2,max = 20)
     @Column(name = "first_name")
     private String firstName;
 
     @NotNull
+    @Length(min = 2,max = 20)
     @Column(name = "last_name")
     private String lastName;
 
@@ -40,6 +43,7 @@ public class User {
     private String email;
 
     @NotNull
+    @Length(min = 8)
     @Column(name = "password")
     private String password;
 

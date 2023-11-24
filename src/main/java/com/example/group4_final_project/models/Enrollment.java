@@ -23,10 +23,16 @@ public class Enrollment {
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private User student;
-    @Column(nullable = false, updatable = false, insertable = false)
+    @Column(nullable = false, updatable = false, insertable = true)
     private Timestamp enrolledAt;
 
     public Enrollment() {
 
+    }
+
+    public Enrollment(Course course, User student, Timestamp enrolledAt) {
+        this.course = course;
+        this.student = student;
+        this.enrolledAt = enrolledAt;
     }
 }

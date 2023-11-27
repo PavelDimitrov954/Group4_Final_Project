@@ -1,6 +1,6 @@
 package com.example.group4_final_project.repositories;
 
-import com.example.group4_final_project.models.Enrollment;
+import com.example.group4_final_project.models.models.Enrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

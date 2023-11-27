@@ -2,9 +2,9 @@ package com.example.group4_final_project.helpers;
 
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
-import com.example.group4_final_project.models.User;
+import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.UserRepository;
-import com.example.group4_final_project.services.UserService;
+import com.example.group4_final_project.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,9 +16,8 @@ public class AuthenticationHelper {
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
 
-   private final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
 
 
     @Autowired
@@ -45,16 +44,14 @@ public class AuthenticationHelper {
     }
 
 
-
-
     public User verifyAuthentication(String email, String password) {
         try {
 
             User user = userRepository.findByEmail(email);
-           if (user == null ) {
-               throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
-           }
-            if(!passwordEncoder.matches(password, user.getPassword())){
+            if (user == null) {
+                throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+            }
+            if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
             }
             return user;

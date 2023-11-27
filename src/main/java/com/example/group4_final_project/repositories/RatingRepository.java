@@ -1,6 +1,6 @@
 package com.example.group4_final_project.repositories;
 
-import com.example.group4_final_project.models.Rating;
+import com.example.group4_final_project.models.models.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

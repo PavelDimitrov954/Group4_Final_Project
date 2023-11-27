@@ -5,8 +5,12 @@ import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
-import com.example.group4_final_project.models.*;
-import com.example.group4_final_project.services.UserService;
+import com.example.group4_final_project.models.DTOs.UserRegisterDto;
+import com.example.group4_final_project.models.DTOs.UserUpdateDto;
+import com.example.group4_final_project.models.ResponseUser;
+import com.example.group4_final_project.models.filtering.FilterOptionsUser;
+import com.example.group4_final_project.models.models.User;
+import com.example.group4_final_project.services.contracts.UserService;
 import jakarta.validation.Valid;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.data.domain.Page;
@@ -100,20 +104,6 @@ public class UserRestController {
         }
     }
 
-    @PostMapping("/enrollCourse/{id}")
-    public void enrollCourse(@RequestHeader HttpHeaders headers, @PathVariable int id){
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            userService.enrollCourse(user, id);
-
-
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
-
-    }
+}
 
 

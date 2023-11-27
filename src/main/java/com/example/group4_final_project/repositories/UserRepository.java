@@ -1,6 +1,6 @@
 package com.example.group4_final_project.repositories;
 
-import com.example.group4_final_project.models.User;
+import com.example.group4_final_project.models.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

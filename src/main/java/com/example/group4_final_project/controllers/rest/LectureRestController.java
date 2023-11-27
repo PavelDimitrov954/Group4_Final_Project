@@ -1,9 +1,9 @@
 package com.example.group4_final_project.controllers.rest;
 
 import com.example.group4_final_project.helpers.AuthenticationHelper;
-import com.example.group4_final_project.models.FilterOptionsLecture;
-import com.example.group4_final_project.models.Lecture.LectureDto;
-import com.example.group4_final_project.services.LectureService;
+import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
+import com.example.group4_final_project.models.DTOs.LectureDto;
+import com.example.group4_final_project.services.contracts.LectureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

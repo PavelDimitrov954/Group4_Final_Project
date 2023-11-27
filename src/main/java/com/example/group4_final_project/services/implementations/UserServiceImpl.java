@@ -1,4 +1,4 @@
-package com.example.group4_final_project.services;
+package com.example.group4_final_project.services.implementations;
 
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;

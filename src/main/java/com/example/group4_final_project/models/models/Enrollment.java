@@ -1,5 +1,8 @@
 package com.example.group4_final_project.models.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,12 +21,15 @@ public class Enrollment {
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
+    @JsonBackReference
     private Course course;
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private User student;
-    @Column(nullable = false, updatable = false, insertable = true)
+
+
+    @Column(nullable = false, updatable = false)
     private Timestamp enrolledAt;
 
     public Enrollment() {

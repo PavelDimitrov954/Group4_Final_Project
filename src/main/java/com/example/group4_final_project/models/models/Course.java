@@ -1,5 +1,6 @@
 package com.example.group4_final_project.models.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,6 +52,7 @@ public class Course {
     private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "course")
+    @JsonManagedReference
     private Set<Enrollment> enrollments;
 
 

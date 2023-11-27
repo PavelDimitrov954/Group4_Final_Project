@@ -4,7 +4,6 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.UserRepository;
-import com.example.group4_final_project.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,10 +20,8 @@ public class AuthenticationHelper {
 
 
     @Autowired
-    public AuthenticationHelper(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthenticationHelper(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-
-
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -38,9 +35,7 @@ public class AuthenticationHelper {
         String email = getEmail(userInfo);
         String password = getPassword(userInfo);
 
-        User user = verifyAuthentication(email, password);
-
-        return user;
+        return verifyAuthentication(email, password);
     }
 
 

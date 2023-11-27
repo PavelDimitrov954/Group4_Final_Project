@@ -28,7 +28,7 @@ public class UserRestController {
     private final AuthenticationHelper authenticationHelper;
 
 
-    public UserRestController(UserService userService, UserMapper userMapper, AuthenticationHelper authenticationHelper) {
+    public UserRestController(UserService userService, AuthenticationHelper authenticationHelper) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
     }

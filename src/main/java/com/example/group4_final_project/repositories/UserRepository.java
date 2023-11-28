@@ -24,11 +24,10 @@ public interface UserRepository extends JpaRepository<User,Integer> {
           "WHERE (:firstName is null or u.firstName like  LOWER(CONCAT(:firstName, '%'))) " +
           "AND (:lastName is null or u.lastName like  LOWER(CONCAT(:lastName, '%'))) " +
           "AND (:email is null or u.email like LOWER(CONCAT(:email, '%')))")
-  Page<User> findUsersByParameters(
+  List<User> findUsersByParameters(
           @Param("firstName") String firstName,
           @Param("lastName") String lastName,
-          @Param("email") String email,
-          Pageable pageable
+          @Param("email") String email
   );
 
 

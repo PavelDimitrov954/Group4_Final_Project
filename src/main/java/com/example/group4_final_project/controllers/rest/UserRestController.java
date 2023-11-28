@@ -4,7 +4,6 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
-import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
 import com.example.group4_final_project.models.ResponseUser;
@@ -35,7 +34,7 @@ public class UserRestController {
 
 
     @GetMapping
-    public Page<User> get(@RequestHeader HttpHeaders headers,
+    public Page<ResponseUser> get(@RequestHeader HttpHeaders headers,
                           @RequestParam(required = false) String email,
                           @RequestParam(required = false) String firstName,
                           @RequestParam(required = false) String lastName,
@@ -65,10 +64,9 @@ public class UserRestController {
     @PostMapping()
     public ResponseUser register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         try {
+
             return userService.register(userRegisterDto);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityDuplicateException e) {
+        }  catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

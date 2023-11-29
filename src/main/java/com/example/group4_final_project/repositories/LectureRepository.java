@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Integer>, JpaSpecificationExecutor<Lecture> {
     // Find lectures by course
-    List<Lecture> findByCourseId(Integer courseId);
+    Optional<List<Lecture>> findByCourseId(Integer courseId);
 
     // Find lectures by title containing a string
-    List<Lecture> findByTitleContaining(String title);
+    Optional<List<Lecture>> findByTitleContaining(String title);
 }

@@ -22,11 +22,11 @@ public class Submission {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-  @Column(name = "submission_file")
-  private File submissionFile;
+    @Column(name = "submission_file_path")
+    private String submissionFilePath;
 
     @Column(name = "grade")
     private BigDecimal grade;

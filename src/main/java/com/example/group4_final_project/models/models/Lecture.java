@@ -20,7 +20,6 @@ public class Lecture {
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
-    @NotNull
     private Course course;
 
     @Column(nullable = false, length = 50)

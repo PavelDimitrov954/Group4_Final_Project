@@ -5,9 +5,10 @@ import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.models.models.Lecture;
 import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.repositories.CourseRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public class LectureMapper {
     private final CourseRepository courseRepository;
 

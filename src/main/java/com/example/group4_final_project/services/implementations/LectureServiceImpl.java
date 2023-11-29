@@ -1,9 +1,12 @@
 package com.example.group4_final_project.services.implementations;
 
+import com.example.group4_final_project.exceptions.AuthorizationException;
+import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.LectureMapper;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
 import com.example.group4_final_project.models.models.Lecture;
 import com.example.group4_final_project.models.DTOs.LectureDto;
+import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.LectureRepository;
 import com.example.group4_final_project.services.contracts.LectureService;
 import jakarta.persistence.criteria.Predicate;
@@ -27,33 +30,59 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public LectureDto createLecture(LectureDto lectureDto) {
+    public LectureDto createLecture(LectureDto lectureDto, User creator) throws AuthorizationException {
+
+        checkUserRoles(creator, List.of("TEACHER", "ADMIN"));
+
         Lecture lecture = lectureMapper.toEntity(lectureDto);
         return lectureMapper.toDto(lectureRepository.save(lecture));
     }
 
+
+//    @Override
+//    public LectureDto updateLecture(Integer id, LectureDto lectureDto) {
+//        Lecture existingLecture = lectureRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Lecture not found"));
+//
+//        existingLecture.setTitle(lectureDto.getTitle());
+//        existingLecture.setDescription(lectureDto.getDescription());
+//        existingLecture.setVideoLink(lectureDto.getVideoLink());
+//
+//        return lectureMapper.toDto(lectureRepository.save(existingLecture));
+//    }
+
+    // In LectureServiceImpl
+
     @Override
-    public LectureDto updateLecture(Integer id, LectureDto lectureDto) {
+    public LectureDto updateLecture(Integer id, LectureDto lectureDto, User user) throws AuthorizationException, EntityNotFoundException {
         Lecture existingLecture = lectureRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Lecture not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
+
+
+        checkUserRoles(user, List.of("TEACHER", "ADMIN"));
 
         existingLecture.setTitle(lectureDto.getTitle());
         existingLecture.setDescription(lectureDto.getDescription());
         existingLecture.setVideoLink(lectureDto.getVideoLink());
-
         return lectureMapper.toDto(lectureRepository.save(existingLecture));
     }
 
 
     @Override
-    public void deleteLecture(Integer id) {
+    public void deleteLecture(Integer id, User user) {
+        lectureRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
+
+        checkUserRoles(user, List.of("TEACHER", "ADMIN"));
+
+
         lectureRepository.deleteById(id);
     }
 
     @Override
     public LectureDto getLectureById(Integer id) {
         Lecture lecture = lectureRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Lecture not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
         return lectureMapper.toDto(lecture);
     }
 
@@ -81,5 +110,16 @@ public class LectureServiceImpl implements LectureService {
                 .map(lectureMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    private void checkUserRoles(User user, List<String> requiredRoles) {
+        boolean hasAnyRole = requiredRoles.stream()
+                .anyMatch(requiredRole -> user.getRoles().stream()
+                        .anyMatch(userRole -> userRole.getName().equalsIgnoreCase(requiredRole)));
+
+        if (!hasAnyRole) {
+            throw new AuthorizationException("User does not have any of the required roles: " + requiredRoles);
+        }
+    }
+
 
 }

@@ -24,4 +24,6 @@ public interface UserService {
 
 
     void enrollCourse(User user, int id);
+
+    User addPicture(User user, String url);
 }

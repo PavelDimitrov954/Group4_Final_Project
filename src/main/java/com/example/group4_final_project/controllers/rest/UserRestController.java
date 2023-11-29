@@ -4,6 +4,7 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
+import com.example.group4_final_project.helpers.ImageHelper;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
 import com.example.group4_final_project.models.ResponseUser;
@@ -17,7 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,10 +30,14 @@ public class UserRestController {
 
     private final AuthenticationHelper authenticationHelper;
 
+    private final ImageHelper imageHelper;
 
-    public UserRestController(UserService userService, AuthenticationHelper authenticationHelper) {
+
+
+    public UserRestController(UserService userService, AuthenticationHelper authenticationHelper, ImageHelper imageHelper) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
+        this.imageHelper = imageHelper;
     }
 
 
@@ -76,6 +84,7 @@ public class UserRestController {
     @PutMapping("/{id}")
     public ResponseUser update(@RequestHeader HttpHeaders headers,
                                @PathVariable int id,
+
                                @RequestBody @Valid UserUpdateDto userUpdateDto) {
 
         try {
@@ -100,6 +109,18 @@ public class UserRestController {
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
+    }
+    @PostMapping("/{id}/picture")
+    public User picture ( @RequestHeader HttpHeaders headers,
+                          @RequestBody MultipartFile multipartFile, @PathVariable int id ) throws IOException {
+
+        User user = authenticationHelper.tryGetUser(headers);
+
+
+        String url = imageHelper.uploadImage(multipartFile);
+
+       return userService.addPicture(user, url);
+
     }
 
 }

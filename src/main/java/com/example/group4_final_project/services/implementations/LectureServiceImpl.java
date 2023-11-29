@@ -3,6 +3,7 @@ package com.example.group4_final_project.services.implementations;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.LectureMapper;
+import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
 import com.example.group4_final_project.models.models.Lecture;
 import com.example.group4_final_project.models.DTOs.LectureDto;
@@ -32,7 +33,7 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public LectureDto createLecture(LectureDto lectureDto, User creator) throws AuthorizationException {
 
-        checkUserRoles(creator, List.of("TEACHER", "ADMIN"));
+        checkUserRoles(creator, List.of(RoleName.TEACHER, RoleName.ADMIN));
 
         Lecture lecture = lectureMapper.toEntity(lectureDto);
         return lectureMapper.toDto(lectureRepository.save(lecture));
@@ -59,7 +60,7 @@ public class LectureServiceImpl implements LectureService {
                 .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
 
 
-        checkUserRoles(user, List.of("TEACHER", "ADMIN"));
+        checkUserRoles(user, List.of(RoleName.TEACHER, RoleName.ADMIN));
 
         existingLecture.setTitle(lectureDto.getTitle());
         existingLecture.setDescription(lectureDto.getDescription());
@@ -73,7 +74,7 @@ public class LectureServiceImpl implements LectureService {
         lectureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
 
-        checkUserRoles(user, List.of("TEACHER", "ADMIN"));
+        checkUserRoles(user, List.of(RoleName.TEACHER, RoleName.ADMIN));
 
 
         lectureRepository.deleteById(id);
@@ -111,10 +112,10 @@ public class LectureServiceImpl implements LectureService {
                 .collect(Collectors.toList());
     }
 
-    private void checkUserRoles(User user, List<String> requiredRoles) {
+    private void checkUserRoles(User user, List<RoleName> requiredRoles) {
         boolean hasAnyRole = requiredRoles.stream()
                 .anyMatch(requiredRole -> user.getRoles().stream()
-                        .anyMatch(userRole -> userRole.getName().equalsIgnoreCase(requiredRole)));
+                        .anyMatch(userRole -> userRole.getRoleName() == requiredRole));
 
         if (!hasAnyRole) {
             throw new AuthorizationException("User does not have any of the required roles: " + requiredRoles);

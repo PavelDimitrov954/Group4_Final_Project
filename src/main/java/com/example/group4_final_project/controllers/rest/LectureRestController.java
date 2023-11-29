@@ -119,7 +119,7 @@ public class LectureRestController {
     public ResponseEntity<String> submitAssignment(@PathVariable Integer lectureId,
                                                    @RequestParam("userId") Integer userId,
                                                    @RequestParam("file") MultipartFile file) throws IOException {
-        try {
+        /*try {
             if (file.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is empty");
             }
@@ -132,6 +132,9 @@ public class LectureRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing file");
-        }
+        }*/
+        return null;
     }
+
+
 }

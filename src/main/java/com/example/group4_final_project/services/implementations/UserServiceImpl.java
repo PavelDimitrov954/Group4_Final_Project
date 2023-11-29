@@ -105,7 +105,7 @@ List<ResponseUser>  responseUsers = userRepository.findUsersByParameters(firstNa
         }
 
         if (role.getRoleName().equals(RoleName.TEACHER)) {
-            role.setRoleName(RoleName.UNAPPROVED_TEACHER);
+          role = roleRepository.findByRoleName(RoleName.UNAPPROVED_TEACHER) ;
         }
 
         Set<Role> roles = new HashSet<>();
@@ -181,6 +181,14 @@ List<ResponseUser>  responseUsers = userRepository.findUsersByParameters(firstNa
         enrollmentRepository.save(enrollment);
 
 
+    }
+
+    @Override
+    public User addPicture(User user, String url) {
+
+        user.setImageURL(url);
+        userRepository.save(user);
+        return user;
     }
 
 

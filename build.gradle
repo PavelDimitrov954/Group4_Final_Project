@@ -34,6 +34,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.security:spring-security-crypto'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
+    implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.30.0'
 
     implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '4.3.1'
     implementation group: 'com.querydsl', name: 'querydsl-apt', version:'4.3.1'

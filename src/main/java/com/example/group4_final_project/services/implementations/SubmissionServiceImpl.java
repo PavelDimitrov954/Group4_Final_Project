@@ -32,11 +32,11 @@ public class SubmissionServiceImpl implements SubmissionService {
     private String fileStorageLocation;  // Directory for file storage
 
     @Autowired
-    public SubmissionServiceImpl(SubmissionRepository submissionRepository, AssignmentRepository assignmentRepository, UserRepository userRepository, String fileStorageLocation) {
+    public SubmissionServiceImpl(SubmissionRepository submissionRepository, AssignmentRepository assignmentRepository, UserRepository userRepository) {
         this.submissionRepository = submissionRepository;
         this.assignmentRepository = assignmentRepository;
         this.userRepository = userRepository;
-        this.fileStorageLocation = fileStorageLocation;
+
     }
 
     public void submitAssignment(Integer lectureId, Integer userId, MultipartFile file) throws IOException {

@@ -7,6 +7,7 @@ import com.example.group4_final_project.models.models.Lecture;
 import com.example.group4_final_project.repositories.AssignmentRepository;
 import com.example.group4_final_project.repositories.LectureRepository;
 import com.example.group4_final_project.services.contracts.AssignmentService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,12 +24,14 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
     private final LectureRepository lectureRepository;
-    private final String fileStorageLocation;
 
-    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, LectureRepository lectureRepository, String fileStorageLocation) {
+    @Value("${file.storage.location}")
+    private  String fileStorageLocation;
+
+    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, LectureRepository lectureRepository) {
         this.assignmentRepository = assignmentRepository;
         this.lectureRepository = lectureRepository;
-        this.fileStorageLocation = fileStorageLocation;
+
     }
 
     @Override
@@ -89,7 +92,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         Assignment assignment = new Assignment();
         assignment.setLecture(lecture); // Fetch or reference the Lecture entity
-        assignment.setFilePath(filePath.toString()); // Set the file path
+        //assignment.setFilePath(filePath.toString()); // Set the file path
         assignment.setTitle("Some title"); // Set other properties as required
 
         assignmentRepository.save(assignment);

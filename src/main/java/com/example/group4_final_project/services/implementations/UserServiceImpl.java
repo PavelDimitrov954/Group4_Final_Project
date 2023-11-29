@@ -7,6 +7,7 @@ import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
 import com.example.group4_final_project.models.ResponseUser;
+import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.Course;
@@ -18,6 +19,7 @@ import com.example.group4_final_project.repositories.RoleRepository;
 import com.example.group4_final_project.repositories.UserRepository;
 import com.example.group4_final_project.services.contracts.UserService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,14 +27,14 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     public static final String INVALID_AUTHORIZATION = "Invalid authorization";
-    public static final String TEACHER_ROLE_NAME = "teacher";
-    public static final String UNAPPROVED_TEACHER_ROLE_NAME = "unapproved_teacher";
     public static final String ERROR_ENROLL_COURSE = "Only students can enroll this course";
     public static final String YOU_ARE_ALREADY_ENROLLED_IN_THIS_COURSE = "You are already enrolled in this course";
 
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> get(FilterOptionsUser filterOptionsUser, Pageable pageable) {
+    public Page<ResponseUser> get(FilterOptionsUser filterOptionsUser, Pageable pageable) {
         String firstName = filterOptionsUser.getFirstName().isPresent()
                 ? filterOptionsUser.getFirstName().get() : null;
 
@@ -80,10 +82,11 @@ public class UserServiceImpl implements UserService {
         String email = filterOptionsUser.getEmail().isPresent()
                 ? filterOptionsUser.getEmail().get() : null;
 
-        return userRepository.findUsersByParameters(firstName,
-                lastName, email, pageable);
+List<ResponseUser>  responseUsers = userRepository.findUsersByParameters(firstName,
+        lastName, email).stream().map(userMapper::fromUser).collect(Collectors.toList());
+      Page page = new PageImpl(responseUsers);
 
-
+     return page;
     }
 
 
@@ -95,19 +98,14 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(registerUser.getEmail()) != null) {
             throw new EntityDuplicateException("User", "email", registerUser.getEmail());
         }
-        Role role = roleRepository.findByName(user.getRoleName());
+        Role role = roleRepository.findByRoleName(RoleName.valueOf(user.getRoleName().toUpperCase()));
 
         if (role == null) {
-            role = new Role(user.getRoleName());
-            roleRepository.save(role);
+          throw new EntityNotFoundException("Role","RoleName",user.getRoleName().toUpperCase());
         }
 
-        if (user.getRoleName().equals(TEACHER_ROLE_NAME)) {
-            role = roleRepository.findByName(UNAPPROVED_TEACHER_ROLE_NAME);
-            if (role == null) {
-                role = new Role(UNAPPROVED_TEACHER_ROLE_NAME);
-                roleRepository.save(role);
-            }
+        if (role.getRoleName().equals(RoleName.TEACHER)) {
+            role.setRoleName(RoleName.UNAPPROVED_TEACHER);
         }
 
         Set<Role> roles = new HashSet<>();
@@ -162,7 +160,7 @@ public class UserServiceImpl implements UserService {
     public void enrollCourse(User user, int id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Course", id));
-        Role role = roleRepository.findByName("student");
+        Role role = roleRepository.findByRoleName(RoleName.STUDENT);
 
         if (!user.getRoles().contains(role) || role == null) {
             throw new AuthorizationException(ERROR_ENROLL_COURSE);

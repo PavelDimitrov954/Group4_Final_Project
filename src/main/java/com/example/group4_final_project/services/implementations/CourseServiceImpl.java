@@ -6,6 +6,7 @@ import com.example.group4_final_project.helpers.CourseMapper;
 import com.example.group4_final_project.models.DTOs.CourseDto;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
+import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.filtering.FilterOptionsCourse;
 import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.models.models.CourseTopic;
@@ -86,7 +87,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseDto createCourse(User userWhoCreates, CreateCourseDto courseDto) {
-        if (!userWhoCreates.getRoles().contains(roleRepository.findByName(TEACHER_ROLE))) {
+        if (!userWhoCreates.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
             throw new AuthorizationException(UNAUTHORIZED_USER_EXCEPTION);
         }
         Course course = courseMapper.toEntity(courseDto);
@@ -131,7 +132,7 @@ public class CourseServiceImpl implements CourseService {
       Course courseToDelete = courseRepository.findById(id).
                 orElseThrow(() -> new EntityNotFoundException("Course", id));
         if ((!courseToDelete.getTeacher().equals(userWhoDeletes)) ||
-                userWhoDeletes.getRoles().contains(roleRepository.findByName(ADMIN_ROLE))) {
+                userWhoDeletes.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN))) {
             throw new AuthorizationException(UNAUTHORIZED_USER_EXCEPTION);
         }
         courseRepository.delete(courseToDelete);

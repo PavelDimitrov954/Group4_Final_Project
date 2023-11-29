@@ -1,5 +1,6 @@
 package com.example.group4_final_project.models.models;
 
+import com.example.group4_final_project.models.enums.RoleName;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -19,10 +20,11 @@ public class Role {
     private int id;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "name")
-    private String name;
+    private RoleName roleName ;
 
-    public Role(String name) {
-        this.name = name;
+    public Role(RoleName roleName) {
+        this.roleName = roleName;
     }
 }

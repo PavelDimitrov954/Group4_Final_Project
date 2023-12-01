@@ -28,7 +28,9 @@ public class CourseMapper {
         dto.setTopic(course.getTopic().getName());
         dto.setTitle(course.getTitle());
         dto.setRating(course.getRating());
-        dto.setEnrollments(enrollmentMapper.toDto(course.getEnrollments()));
+        if (course.getEnrollments() != null) {
+            dto.setEnrollments(enrollmentMapper.toDto(course.getEnrollments()));
+        }
         dto.setTeacher(userMapper.fromUser(course.getTeacher()));
         dto.setStartDate(course.getStartDate());
         dto.setCreatedAt(course.getCreatedAt());
@@ -36,6 +38,7 @@ public class CourseMapper {
         dto.setUpdatedAt(course.getUpdatedAt());
         return dto;
     }
+
 
     public Course toEntity(CreateCourseDto dto) {
         Course course = new Course();

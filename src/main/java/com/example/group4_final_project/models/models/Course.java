@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -43,7 +44,7 @@ public class Course {
 
 
     @Column
-    private int rating;
+    private Integer rating;
 
     @Column(nullable = false, updatable = false)
     private Timestamp createdAt;
@@ -53,6 +54,7 @@ public class Course {
     private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "course")
+    @Nullable
     @JsonManagedReference
     private Set<Enrollment> enrollments;
 

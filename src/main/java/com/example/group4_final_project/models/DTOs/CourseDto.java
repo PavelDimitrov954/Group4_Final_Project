@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -31,11 +32,13 @@ public class CourseDto {
 
     private ResponseUser teacher;
 
-    private int rating;
+    @Nullable
+    private Integer rating;
 
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
 
+    @Nullable
     private Set<EnrollmentDto> enrollments;
 }

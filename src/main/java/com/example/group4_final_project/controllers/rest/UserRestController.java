@@ -7,7 +7,7 @@ import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.ImageHelper;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
-import com.example.group4_final_project.models.ResponseUser;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.UserService;

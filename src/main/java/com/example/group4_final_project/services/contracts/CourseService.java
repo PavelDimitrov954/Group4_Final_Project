@@ -4,7 +4,6 @@ import com.example.group4_final_project.models.DTOs.CourseDto;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsCourse;
-import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.models.models.User;
 
 import java.util.List;

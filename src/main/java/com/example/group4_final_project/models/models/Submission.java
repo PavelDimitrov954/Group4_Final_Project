@@ -16,26 +16,30 @@ import java.util.Set;
 @Table(name = "submissions")
 public class Submission {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "submission_id")
     private int id;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "submission_file_path")
-    private String submissionFilePath;
 
     @Column(name = "grade")
     private BigDecimal grade;
+
+
+    @Column(name = "submission_file_path")
+    private String submissionFilePath;
+
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "assignment_submissions",
-            joinColumns = @JoinColumn(name = "assignment_id")
+            joinColumns = @JoinColumn(name = "assignment_id"),
+            inverseJoinColumns = @JoinColumn(name = "assignment_id")
 
     )
     Set<Assignment> assignmentSet;

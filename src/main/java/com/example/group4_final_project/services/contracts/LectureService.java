@@ -11,9 +11,14 @@ import java.util.List;
 
 public interface LectureService {
     LectureDto createLecture(LectureDto lectureDto, User creator);
+
     LectureDto updateLecture(Integer id, LectureDto lectureDto, User user);
+
     void deleteLecture(Integer id, User user);
+
     LectureDto getLectureById(Integer id);
+
     List<LectureDto> getAllLectures();
+
     List<LectureDto> getLecturesByFilter(FilterOptionsLecture filterOptions);
 }

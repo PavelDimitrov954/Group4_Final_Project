@@ -6,7 +6,7 @@ import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
-import com.example.group4_final_project.models.ResponseUser;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;

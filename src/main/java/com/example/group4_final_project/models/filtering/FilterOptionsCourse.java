@@ -16,7 +16,7 @@ public class FilterOptionsCourse {
     private Optional<User> teacher;
     private Optional<Integer> rating;
 
-    public FilterOptionsCourse(String courseTitle, CourseTopic courseTopic, User teacher, Integer rating){
+    public FilterOptionsCourse(String courseTitle, CourseTopic courseTopic, User teacher, Integer rating) {
         this.courseTitle = Optional.ofNullable(courseTitle);
         this.courseTopic = Optional.ofNullable(courseTopic);
         this.teacher = Optional.ofNullable(teacher);

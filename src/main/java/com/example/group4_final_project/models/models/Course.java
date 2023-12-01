@@ -41,6 +41,7 @@ public class Course {
     @JoinColumn(name = "teacher_id")
     private User teacher;
 
+
     @Column
     private int rating;
 

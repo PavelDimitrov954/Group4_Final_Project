@@ -41,10 +41,7 @@ public class CourseServiceImpl implements CourseService {
     private final RoleRepository roleRepository;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository,
-                             CourseMapper courseMapper,
-                             CourseTopicRepository courseTopicRepository,
-                             RoleRepository roleRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, CourseMapper courseMapper, CourseTopicRepository courseTopicRepository, RoleRepository roleRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseTopicRepository = courseTopicRepository;
@@ -53,8 +50,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseDto getById(int id) {
-        return courseMapper.toDto(courseRepository.findById(id).
-                orElseThrow(() -> new EntityNotFoundException("Course", id)));
+        return courseMapper.toDto(courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course", id)));
     }
 
     @Override
@@ -67,17 +63,13 @@ public class CourseServiceImpl implements CourseService {
         return courseMapper.toDto(courseRepository.findAll((Specification<Course>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            filterOptionsCourse.getCourseTitle().ifPresent(title ->
-                    predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%")));
+            filterOptionsCourse.getCourseTitle().ifPresent(title -> predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%")));
 
-            filterOptionsCourse.getCourseTopic().ifPresent(topic ->
-                    predicates.add(criteriaBuilder.equal(root.get("topic"), topic)));
+            filterOptionsCourse.getCourseTopic().ifPresent(topic -> predicates.add(criteriaBuilder.equal(root.get("topic"), topic)));
 
-            filterOptionsCourse.getTeacher().ifPresent(teacher ->
-                    predicates.add(criteriaBuilder.equal(root.get("teacher"), teacher)));
+            filterOptionsCourse.getTeacher().ifPresent(teacher -> predicates.add(criteriaBuilder.equal(root.get("teacher"), teacher)));
             //TODO Has a potential to break; criteriaBuilder might need to be used with .like
-            filterOptionsCourse.getRating().ifPresent(rating ->
-                    predicates.add(criteriaBuilder.equal(root.get("rating"), rating)));
+            filterOptionsCourse.getRating().ifPresent(rating -> predicates.add(criteriaBuilder.equal(root.get("rating"), rating)));
 
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -103,8 +95,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public CourseDto updateCourse(User userWhoUpdates, int courseId, UpdateCourseDto courseDto) {
-        Course courseToUpdate = courseRepository.findById(courseId).
-                orElseThrow(() -> new EntityNotFoundException("Course", courseId));
+        Course courseToUpdate = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course", courseId));
         if (!courseToUpdate.getTeacher().equals(userWhoUpdates)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_EXCEPTION);
         }
@@ -120,10 +111,10 @@ public class CourseServiceImpl implements CourseService {
             courseToUpdate.setTopic(topic);
 
         }
-        if (courseDto.getStartDate() != null){
+        if (courseDto.getStartDate() != null) {
             courseToUpdate.setStartDate(courseDto.getStartDate());
         }
-        return courseMapper.toDto( courseRepository.save(courseToUpdate));
+        return courseMapper.toDto(courseRepository.save(courseToUpdate));
     }
 
     @Override

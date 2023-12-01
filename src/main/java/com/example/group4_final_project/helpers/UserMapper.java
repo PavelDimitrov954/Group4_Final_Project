@@ -1,10 +1,10 @@
 package com.example.group4_final_project.helpers;
 
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
-import com.example.group4_final_project.models.ResponseUser;
-import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
+import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class UserMapper {
         updateUser.setId(user.getId());
 
 
-     return updateUser;
+        return updateUser;
 
     }
 

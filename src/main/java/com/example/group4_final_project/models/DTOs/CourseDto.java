@@ -29,7 +29,7 @@ public class CourseDto {
     @DateTimeFormat
     private Date startDate;
 
-    private User teacher;
+    private ResponseUser teacher;
 
     private int rating;
 
@@ -37,5 +37,5 @@ public class CourseDto {
 
     private Timestamp updatedAt;
 
-    private Set<Enrollment> enrollments;
+    private Set<EnrollmentDto> enrollments;
 }

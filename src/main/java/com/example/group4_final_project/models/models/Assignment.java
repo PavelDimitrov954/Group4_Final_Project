@@ -30,8 +30,6 @@ public class Assignment {
     private Timestamp createdAt;
 
 
-
-
     //TODO Should modified_at be added as field?
     public Assignment(int id,
                       Lecture lecture,

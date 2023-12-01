@@ -4,6 +4,7 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.CourseMapper;
 import com.example.group4_final_project.models.DTOs.CourseDto;
+import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
 import com.example.group4_final_project.models.enums.RoleName;
@@ -41,7 +42,10 @@ public class CourseServiceImpl implements CourseService {
     private final RoleRepository roleRepository;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, CourseMapper courseMapper, CourseTopicRepository courseTopicRepository, RoleRepository roleRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository,
+                             CourseMapper courseMapper,
+                             CourseTopicRepository courseTopicRepository,
+                             RoleRepository roleRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseTopicRepository = courseTopicRepository;
@@ -49,27 +53,32 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDto getById(int id) {
-        return courseMapper.toDto(courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course", id)));
+    public CourseDtoView getById(int id) {
+        return courseMapper.toDtoView(courseRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Course", id)));
     }
 
     @Override
-    public List<CourseDto> getAllCourses() {
-        return courseMapper.toDto(courseRepository.findAll());
+    public List<CourseDtoView> getAllCourses() {
+        return courseMapper.toDtoViews(courseRepository.findAll());
     }
 
     @Override
-    public List<CourseDto> getAllCourses(FilterOptionsCourse filterOptionsCourse) {
-        return courseMapper.toDto(courseRepository.findAll((Specification<Course>) (root, query, criteriaBuilder) -> {
+    public List<CourseDtoView> getAllCourses(FilterOptionsCourse filterOptionsCourse) {
+        return courseMapper.toDtoViews(courseRepository.findAll((Specification<Course>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            filterOptionsCourse.getCourseTitle().ifPresent(title -> predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%")));
+            filterOptionsCourse.getCourseTitle().ifPresent(title ->
+                    predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%")));
 
-            filterOptionsCourse.getCourseTopic().ifPresent(topic -> predicates.add(criteriaBuilder.equal(root.get("topic"), topic)));
+            filterOptionsCourse.getCourseTopic().ifPresent(topic ->
+                    predicates.add(criteriaBuilder.equal(root.get("topic"), topic)));
 
-            filterOptionsCourse.getTeacher().ifPresent(teacher -> predicates.add(criteriaBuilder.equal(root.get("teacher"), teacher)));
+            filterOptionsCourse.getTeacher().ifPresent(teacher ->
+                    predicates.add(criteriaBuilder.equal(root.get("teacher"), teacher)));
             //TODO Has a potential to break; criteriaBuilder might need to be used with .like
-            filterOptionsCourse.getRating().ifPresent(rating -> predicates.add(criteriaBuilder.equal(root.get("rating"), rating)));
+            filterOptionsCourse.getRating().ifPresent(rating ->
+                    predicates.add(criteriaBuilder.equal(root.get("rating"), rating)));
 
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -78,7 +87,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDto createCourse(User userWhoCreates, CreateCourseDto courseDto) {
+    public CourseDtoView createCourse(User userWhoCreates, CreateCourseDto courseDto) {
         if (!userWhoCreates.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
             throw new AuthorizationException(UNAUTHORIZED_USER_EXCEPTION);
         }
@@ -88,14 +97,15 @@ public class CourseServiceImpl implements CourseService {
         CourseTopic topic = courseTopicRepository.findByName(courseDto.getTopic()).get();
         course.setTopic(topic);
         courseRepository.save(course);
-        return courseMapper.toDto(course);
+        return courseMapper.toDtoView(course);
     }
 
     //TODO This method needs further evaluation and testing before making it as final
     @Override
     @Transactional
-    public CourseDto updateCourse(User userWhoUpdates, int courseId, UpdateCourseDto courseDto) {
-        Course courseToUpdate = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course", courseId));
+    public CourseDtoView updateCourse(User userWhoUpdates, int courseId, UpdateCourseDto courseDto) {
+        Course courseToUpdate = courseRepository.findById(courseId).
+                orElseThrow(() -> new EntityNotFoundException("Course", courseId));
         if (!courseToUpdate.getTeacher().equals(userWhoUpdates)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_EXCEPTION);
         }
@@ -111,10 +121,10 @@ public class CourseServiceImpl implements CourseService {
             courseToUpdate.setTopic(topic);
 
         }
-        if (courseDto.getStartDate() != null) {
+        if (courseDto.getStartDate() != null){
             courseToUpdate.setStartDate(courseDto.getStartDate());
         }
-        return courseMapper.toDto(courseRepository.save(courseToUpdate));
+        return courseMapper.toDtoView( courseRepository.save(courseToUpdate));
     }
 
     @Override
@@ -129,16 +139,4 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.delete(courseToDelete);
 
     }
-
-    //It is not in the mappers package because of the use of courseTopicRepository!
-//    public Course mapUpdateToEntity(UpdateCourseDto dto){
-//        Course course = new Course();
-//        course.setTopic(courseTopicRepository.findByName(dto.getTopic()).get());
-//        course.setDescription(dto.getDescription());
-//        course.setTitle(dto.getTitle());
-//        course.setStartDate(dto.getStartDate());
-//        course.setUpdatedAt(Timestamp.from(Instant.now()));
-//        return course;
-//
-//    }
 }

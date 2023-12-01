@@ -3,8 +3,8 @@ package com.example.group4_final_project.controllers.rest;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
+import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.models.DTOs.CourseDto;
-import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsCourse;
 import com.example.group4_final_project.models.models.CourseTopic;
@@ -33,11 +33,11 @@ public class CourseRestController {
     }
 
     @GetMapping
-    public List<CourseDto> searchCourses(//@RequestHeader HttpHeaders headers,
-                                         @RequestParam(required = false) String courseTitle,
-                                         @RequestParam(required = false) CourseTopic courseTopic,
-                                         @RequestParam(required = false) User teacher,
-                                         @RequestParam(required = false) Integer rating) {
+    public List<CourseDtoView> searchCourses(//@RequestHeader HttpHeaders headers,
+                                             @RequestParam(required = false) String courseTitle,
+                                             @RequestParam(required = false) CourseTopic courseTopic,
+                                             @RequestParam(required = false) User teacher,
+                                             @RequestParam(required = false) Integer rating) {
         try {
             FilterOptionsCourse filterOptions = new FilterOptionsCourse(courseTitle, courseTopic, teacher, rating);
 
@@ -50,7 +50,7 @@ public class CourseRestController {
     }
 
     @GetMapping("/{id}")
-    public CourseDto getCourse(@PathVariable int id) {
+    public CourseDtoView getCourse(@PathVariable int id) {
         //any validations?
         try {
             return courseService.getById(id);
@@ -60,8 +60,8 @@ public class CourseRestController {
     }
 
     @PostMapping
-    public CourseDto createCourse(@RequestHeader HttpHeaders header,
-                                  @RequestBody CreateCourseDto courseDto) {
+    public CourseDtoView createCourse(@RequestHeader HttpHeaders header,
+                                      @RequestBody CourseDto courseDto) {
         try {
             User userWhoCreates = authenticationHelper.tryGetUser(header);
             return
@@ -74,9 +74,9 @@ public class CourseRestController {
     }
 
     @PutMapping("/{id}")
-    public CourseDto updateCourse(@RequestHeader HttpHeaders header,
-                                  @PathVariable int id,
-                                  @RequestBody UpdateCourseDto courseDto) {
+    public CourseDtoView updateCourse(@RequestHeader HttpHeaders header,
+                                      @PathVariable int id,
+                                      @RequestBody UpdateCourseDto courseDto) {
 
         try {
             User userWhoUpdates = authenticationHelper.tryGetUser(header);

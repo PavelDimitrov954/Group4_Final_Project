@@ -5,9 +5,7 @@ import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.ImageHelper;
-import com.example.group4_final_project.models.DTOs.UserRegisterDto;
-import com.example.group4_final_project.models.DTOs.UserUpdateDto;
-import com.example.group4_final_project.models.DTOs.ResponseUser;
+import com.example.group4_final_project.models.DTOs.*;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.UserService;
@@ -59,6 +57,7 @@ public class UserRestController {
     public ResponseUser get(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
+            ResponseUser responseUser = userService.get(id, user);
             return userService.get(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -103,6 +102,7 @@ public class UserRestController {
     public ResponseUser delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
+
             return userService.delete(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -110,16 +110,36 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-    @PostMapping("/{id}/picture")
-    public User picture ( @RequestHeader HttpHeaders headers,
-                          @RequestBody MultipartFile multipartFile, @PathVariable int id ) throws IOException {
+    @PostMapping("/picture")
+    public ResponseUser picture ( @RequestHeader HttpHeaders headers,
+                          @RequestBody MultipartFile multipartFile) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            String url = imageHelper.uploadImage(multipartFile);
+            return userService.addPicture(user, url);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException  e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        User user = authenticationHelper.tryGetUser(headers);
 
+    }
 
-        String url = imageHelper.uploadImage(multipartFile);
+    @PostMapping("/approved/{id}")
+    public void approvedTeacher ( @RequestHeader HttpHeaders headers, @PathVariable int id ) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
 
-       return userService.addPicture(user, url);
+             userService.approvedTeacher(id, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException  e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
 
     }
 

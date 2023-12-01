@@ -1,9 +1,7 @@
 package com.example.group4_final_project.helpers;
 
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
-import com.example.group4_final_project.models.DTOs.UserRegisterDto;
-import com.example.group4_final_project.models.DTOs.UserUpdateDto;
-import com.example.group4_final_project.models.DTOs.ResponseUser;
+import com.example.group4_final_project.models.DTOs.*;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -36,7 +34,7 @@ public class UserMapper {
         updateUser.setId(user.getId());
 
 
-        return updateUser;
+     return updateUser;
 
     }
 
@@ -70,5 +68,25 @@ public class UserMapper {
         responseUserDto.setLastName(user.getLastName());
         responseUserDto.setEmail(user.getEmail());
         return responseUserDto;
+    }
+
+    public ResponseUserStudent toResponseUserStudent(User user) {
+
+        ResponseUserStudent responseUserStudent = new ResponseUserStudent();
+        responseUserStudent.setFirstName(user.getFirstName());
+        responseUserStudent.setLastName(user.getLastName());
+        responseUserStudent.setEmail(user.getEmail());
+
+        return responseUserStudent;
+    }
+
+    public ResponseUserTeacher toResponseUserTeacher(User user) {
+
+        ResponseUserTeacher responseUserTeacher = new ResponseUserTeacher();
+        responseUserTeacher.setFirstName(user.getFirstName());
+        responseUserTeacher.setLastName(user.getLastName());
+        responseUserTeacher.setEmail(user.getEmail());
+
+        return responseUserTeacher;
     }
 }

@@ -1,8 +1,6 @@
 package com.example.group4_final_project.helpers;
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import jakarta.persistence.Column;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 

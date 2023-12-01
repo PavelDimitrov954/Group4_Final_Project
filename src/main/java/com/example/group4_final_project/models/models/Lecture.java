@@ -10,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,6 +26,9 @@ public class Lecture {
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    @OneToOne(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Assignment assignment;
 
     @Column(nullable = false, length = 50)
     private String title;

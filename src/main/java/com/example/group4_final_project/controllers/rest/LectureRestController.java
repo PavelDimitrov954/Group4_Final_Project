@@ -7,6 +7,7 @@ import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
 import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.models.Submission;
+import com.example.group4_final_project.services.contracts.AssignmentService;
 import com.example.group4_final_project.services.contracts.LectureService;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.SubmissionService;
@@ -28,14 +29,16 @@ public class LectureRestController {
 
     private final LectureService lectureService;
     private final SubmissionService submissionService;
+    private final AssignmentService assignmentService;
     private final AuthenticationHelper authenticationHelper;
 
 
     @Autowired
-    public LectureRestController(LectureService lectureService, SubmissionService submissionService, AuthenticationHelper authenticationHelper) {
+    public LectureRestController(LectureService lectureService, SubmissionService submissionService, AuthenticationHelper authenticationHelper, AssignmentService assignmentService) {
         this.lectureService = lectureService;
         this.submissionService = submissionService;
         this.authenticationHelper = authenticationHelper;
+        this.assignmentService = assignmentService;
     }
 
     @GetMapping("/search")
@@ -135,6 +138,26 @@ public class LectureRestController {
         }*/
         return null;
     }
+
+//    @PutMapping("/{lectureId}/assignment")
+//    public ResponseEntity<String> addAssignmentToLecture(@PathVariable Integer lectureId,
+//                                                   @RequestParam("userId") Integer userId,
+//                                                   @RequestParam("file") MultipartFile file) throws IOException {
+//        try {
+//            if (file.isEmpty()) {
+//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is empty");
+//            }
+//
+//            // Additional validations can be added here
+//
+////            assignmentService.save(file);
+//            return ResponseEntity.ok("Assignment '" + assignmentService.getById(lectureId).getTitle() + "' submitted successfully.");
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        } catch (IOException e) {
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing file");
+//        }
+//    }
 
 
 }

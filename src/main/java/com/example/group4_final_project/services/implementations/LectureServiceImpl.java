@@ -11,6 +11,7 @@ import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.LectureRepository;
 import com.example.group4_final_project.services.contracts.LectureService;
 import jakarta.persistence.criteria.Predicate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
+    @Transactional
     public LectureDto createLecture(LectureDto lectureDto, User creator) throws AuthorizationException {
 
         checkUserRoles(creator, List.of(RoleName.TEACHER, RoleName.ADMIN));
@@ -39,25 +41,13 @@ public class LectureServiceImpl implements LectureService {
         return lectureMapper.toDto(lectureRepository.save(lecture));
     }
 
-
-//    @Override
-//    public LectureDto updateLecture(Integer id, LectureDto lectureDto) {
-//        Lecture existingLecture = lectureRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Lecture not found"));
-//
-//        existingLecture.setTitle(lectureDto.getTitle());
-//        existingLecture.setDescription(lectureDto.getDescription());
-//        existingLecture.setVideoLink(lectureDto.getVideoLink());
-//
-//        return lectureMapper.toDto(lectureRepository.save(existingLecture));
-//    }
-
-    // In LectureServiceImpl
-
     @Override
+    @Transactional
     public LectureDto updateLecture(Integer id, LectureDto lectureDto, User user) throws AuthorizationException, EntityNotFoundException {
         Lecture existingLecture = lectureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
+        if (!isUserAuthorizedToModifyLecture(user,existingLecture))
+            throw new AuthorizationException("User is not creator or admin !");
 
 
         checkUserRoles(user, List.of(RoleName.TEACHER, RoleName.ADMIN));
@@ -70,6 +60,7 @@ public class LectureServiceImpl implements LectureService {
 
 
     @Override
+    @Transactional
     public void deleteLecture(Integer id, User user) {
         lectureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
@@ -94,20 +85,26 @@ public class LectureServiceImpl implements LectureService {
                 .collect(Collectors.toList());
     }
 
+    // a method that returns a list of lectures based on the filter options passed as a parameter
+    @Override
     public List<LectureDto> getLecturesByFilter(FilterOptionsLecture filterOptions) {
         return lectureRepository.findAll((root, query, cb) -> {
-                    List<Predicate> predicates = new ArrayList<>();
-                    if (filterOptions.getCourseId().isPresent()) {
-                        predicates.add(cb.equal(root.get("courseId"), filterOptions.getCourseId()));
-                    }
-                    if (filterOptions.getTitle().isPresent()) {
-                        predicates.add(cb.like(root.get("title"), "%" + filterOptions.getTitle() + "%"));
-                    }
-                    if (filterOptions.getDescription().isPresent()) {
-                        predicates.add(cb.like(root.get("description"), "%" + filterOptions.getDescription() + "%"));
-                    }
-                    return cb.and(predicates.toArray(new Predicate[0]));
-                }).stream()
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (filterOptions.getTitle().isPresent()) {
+                predicates.add(cb.like(root.get("title"), "%" + filterOptions.getTitle() + "%"));
+            }
+
+            if (filterOptions.getDescription().isPresent()) {
+                predicates.add(cb.like(root.get("description"), "%" + filterOptions.getDescription() + "%"));
+            }
+
+            if (filterOptions.getCourseId().isPresent()) {
+                predicates.add(cb.equal(root.get("course").get("id"), filterOptions.getCourseId()));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        }).stream()
                 .map(lectureMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -122,5 +119,7 @@ public class LectureServiceImpl implements LectureService {
         }
     }
 
-
+        private boolean isUserAuthorizedToModifyLecture(User user, Lecture lecture) {
+            return user.equals(lecture.getCourse().getTeacher()) || user.getRoles().contains(RoleName.ADMIN);
+        }
 }

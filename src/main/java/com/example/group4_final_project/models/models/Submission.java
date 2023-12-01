@@ -25,20 +25,15 @@ public class Submission {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "submission_file_path")
-    private String submissionFilePath;
+    @ManyToOne
+    @JoinColumn(name = "assignment_id", nullable = false)
+    private Assignment assignment;
+
+    @Column(name = "submission_Url")
+    private String submissionURL;
 
     @Column(name = "grade")
-    private BigDecimal grade;
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "assignment_submissions",
-            joinColumns = @JoinColumn(name = "assignment_id")
-
-    )
-    Set<Assignment> assignmentSet;
+    private Double grade;
 
     @Column(name = "submitted_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

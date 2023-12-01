@@ -2,6 +2,7 @@ package com.example.group4_final_project.services.implementations;
 
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
+import com.example.group4_final_project.helpers.AssignmentHelper;
 import com.example.group4_final_project.models.models.Assignment;
 import com.example.group4_final_project.models.models.Lecture;
 import com.example.group4_final_project.repositories.AssignmentRepository;
@@ -24,14 +25,16 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
     private final LectureRepository lectureRepository;
+    private final AssignmentHelper assignmentHelper;
+
 
     @Value("${file.storage.location}")
     private  String fileStorageLocation;
 
-    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, LectureRepository lectureRepository) {
+    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, LectureRepository lectureRepository, AssignmentHelper assignmentHelper) {
         this.assignmentRepository = assignmentRepository;
         this.lectureRepository = lectureRepository;
-
+        this.assignmentHelper = assignmentHelper;
     }
 
     @Override
@@ -45,6 +48,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
+    @Transactional
     public Assignment save(Assignment assignment) {
         if (assignmentRepository.existsById(assignment.getId())) {
             throw new EntityDuplicateException("Assignment", "id", String.valueOf(assignment.getId()));
@@ -74,27 +78,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             Assignment assignmentToDelete = getById(id);
             assignmentRepository.delete(assignmentToDelete);
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("Course", id);
+            throw new EntityNotFoundException("Assignment", id);
         }
-    }
-
-    public void saveAssignmentFile(Integer lectureId, MultipartFile file) throws IOException {
-        // Generate a unique file name
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(fileStorageLocation).resolve(fileName);
-
-        // Save the file
-        Files.copy(file.getInputStream(), filePath);
-
-        // Link to lecture and save in database
-        Lecture lecture = lectureRepository.findById(lectureId)
-                .orElseThrow(() -> new EntityNotFoundException("Lecture", lectureId));
-
-        Assignment assignment = new Assignment();
-        assignment.setLecture(lecture); // Fetch or reference the Lecture entity
-        //assignment.setFilePath(filePath.toString()); // Set the file path
-        assignment.setTitle("Some title"); // Set other properties as required
-
-        assignmentRepository.save(assignment);
     }
 }

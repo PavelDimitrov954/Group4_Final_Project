@@ -1,4 +1,4 @@
-package com.example.group4_final_project.models;
+package com.example.group4_final_project.models.DTOs;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +16,10 @@ public class ResponseUser {
 
 
     private String email;
+
+    public ResponseUser(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 }

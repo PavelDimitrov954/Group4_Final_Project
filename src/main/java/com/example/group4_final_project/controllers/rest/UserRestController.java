@@ -5,7 +5,9 @@ import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.ImageHelper;
-import com.example.group4_final_project.models.DTOs.*;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
+import com.example.group4_final_project.models.DTOs.UserRegisterDto;
+import com.example.group4_final_project.models.DTOs.UserUpdateDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.UserService;
@@ -31,7 +33,6 @@ public class UserRestController {
     private final ImageHelper imageHelper;
 
 
-
     public UserRestController(UserService userService, AuthenticationHelper authenticationHelper, ImageHelper imageHelper) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
@@ -41,11 +42,11 @@ public class UserRestController {
 
     @GetMapping
     public Page<ResponseUser> get(@RequestHeader HttpHeaders headers,
-                          @RequestParam(required = false) String email,
-                          @RequestParam(required = false) String firstName,
-                          @RequestParam(required = false) String lastName,
-                          // @SortDefault(sort = "update_at", direction = Sort.Direction.DESC)
-                          Pageable pageable) {
+                                  @RequestParam(required = false) String email,
+                                  @RequestParam(required = false) String firstName,
+                                  @RequestParam(required = false) String lastName,
+                                  // @SortDefault(sort = "update_at", direction = Sort.Direction.DESC)
+                                  Pageable pageable) {
         authenticationHelper.tryGetUser(headers);
         FilterOptionsUser filterOptionsUser = new FilterOptionsUser(email, firstName, lastName);
 
@@ -73,7 +74,7 @@ public class UserRestController {
         try {
 
             return userService.register(userRegisterDto);
-        }  catch (EntityDuplicateException e) {
+        } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -110,18 +111,19 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @PostMapping("/picture")
-    public ResponseUser picture ( @RequestHeader HttpHeaders headers,
-                          @RequestBody MultipartFile multipartFile) {
+    public ResponseUser picture(@RequestHeader HttpHeaders headers,
+                                @RequestBody MultipartFile multipartFile) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             String url = imageHelper.uploadImage(multipartFile);
             return userService.addPicture(user, url);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException  e) {
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -129,14 +131,14 @@ public class UserRestController {
     }
 
     @PostMapping("/approved/{id}")
-    public void approvedTeacher ( @RequestHeader HttpHeaders headers, @PathVariable int id ) {
+    public void approvedTeacher(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
 
-             userService.approvedTeacher(id, user);
+            userService.approvedTeacher(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException  e) {
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
 

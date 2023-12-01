@@ -4,9 +4,7 @@ import java.util.Map;
 
 public class GradeDto {
 
-    private  String courseTitle;
-
-    private Map<String, Integer> grades;
-
     double abvGrade;
+    private String courseTitle;
+    private Map<String, Integer> grades;
 }

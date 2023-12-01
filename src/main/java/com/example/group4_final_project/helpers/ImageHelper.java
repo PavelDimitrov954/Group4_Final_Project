@@ -1,4 +1,5 @@
 package com.example.group4_final_project.helpers;
+
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+
 @Component
 public class ImageHelper {
     private static final String CLOUD_NAME = "dnyhome4y";

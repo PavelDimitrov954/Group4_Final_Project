@@ -2,7 +2,6 @@ package com.example.group4_final_project.models.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -33,16 +32,6 @@ public class Assignment {
     @Column(nullable = false, updatable = false, insertable = false)
     private Timestamp createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Timestamp.from(Instant.now());
-
-
-
-
-
-
-    }
     //TODO Should modified_at be added as field?
     public Assignment(int id,
                       Lecture lecture,
@@ -51,9 +40,17 @@ public class Assignment {
         this.id = id;
         this.lecture = lecture;
         this.title = title;
-        this.description = description;}
+        this.description = description;
+    }
 
     public Assignment() {
+
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Timestamp.from(Instant.now());
+
 
     }
 

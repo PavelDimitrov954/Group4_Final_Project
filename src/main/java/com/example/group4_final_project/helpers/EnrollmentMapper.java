@@ -1,16 +1,12 @@
 package com.example.group4_final_project.helpers;
 
-import com.example.group4_final_project.models.DTOs.CourseDto;
-import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.EnrollmentDto;
-import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.models.models.Enrollment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class EnrollmentMapper {
@@ -29,7 +25,6 @@ public class EnrollmentMapper {
 
         return dto;
     }
-
 
 
     public Set<EnrollmentDto> toDto(Set<Enrollment> enrollmentSet) {

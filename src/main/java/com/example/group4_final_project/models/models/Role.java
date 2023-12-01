@@ -21,7 +21,7 @@ public class Role {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "name")
-    private RoleName roleName ;
+    private RoleName roleName;
 
     public Role(RoleName roleName) {
         this.roleName = roleName;

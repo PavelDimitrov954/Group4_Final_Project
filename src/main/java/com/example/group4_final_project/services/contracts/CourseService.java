@@ -1,7 +1,6 @@
 package com.example.group4_final_project.services.contracts;
 
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
-import com.example.group4_final_project.models.DTOs.CourseDto;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsCourse;

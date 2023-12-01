@@ -4,21 +4,14 @@ import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AssignmentHelper;
 import com.example.group4_final_project.models.models.Assignment;
-import com.example.group4_final_project.models.models.Lecture;
 import com.example.group4_final_project.repositories.AssignmentRepository;
 import com.example.group4_final_project.repositories.LectureRepository;
 import com.example.group4_final_project.services.contracts.AssignmentService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -29,7 +22,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
 
     @Value("${file.storage.location}")
-    private  String fileStorageLocation;
+    private String fileStorageLocation;
 
     public AssignmentServiceImpl(AssignmentRepository assignmentRepository, LectureRepository lectureRepository, AssignmentHelper assignmentHelper) {
         this.assignmentRepository = assignmentRepository;

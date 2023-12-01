@@ -4,5 +4,5 @@ public enum RoleName {
     STUDENT,
     TEACHER,
     UNAPPROVED_TEACHER,
-    ADMIN;
+    ADMIN
 }

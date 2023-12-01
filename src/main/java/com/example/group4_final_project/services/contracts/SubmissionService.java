@@ -1,7 +1,6 @@
 package com.example.group4_final_project.services.contracts;
 
 import com.example.group4_final_project.models.models.Submission;
-import com.example.group4_final_project.models.models.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

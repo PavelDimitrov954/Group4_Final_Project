@@ -3,17 +3,17 @@ package com.example.group4_final_project.services.implementations;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.LectureMapper;
+import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
 import com.example.group4_final_project.models.models.Lecture;
-import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.LectureRepository;
 import com.example.group4_final_project.services.contracts.LectureService;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class LectureServiceImpl implements LectureService {
     public LectureDto updateLecture(Integer id, LectureDto lectureDto, User user) throws AuthorizationException, EntityNotFoundException {
         Lecture existingLecture = lectureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Lecture", id));
-        if (!isUserAuthorizedToModifyLecture(user,existingLecture))
+        if (!isUserAuthorizedToModifyLecture(user, existingLecture))
             throw new AuthorizationException("User is not creator or admin !");
 
 
@@ -89,22 +89,22 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<LectureDto> getLecturesByFilter(FilterOptionsLecture filterOptions) {
         return lectureRepository.findAll((root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
+                    List<Predicate> predicates = new ArrayList<>();
 
-            if (filterOptions.getTitle().isPresent()) {
-                predicates.add(cb.like(root.get("title"), "%" + filterOptions.getTitle() + "%"));
-            }
+                    if (filterOptions.getTitle().isPresent()) {
+                        predicates.add(cb.like(root.get("title"), "%" + filterOptions.getTitle() + "%"));
+                    }
 
-            if (filterOptions.getDescription().isPresent()) {
-                predicates.add(cb.like(root.get("description"), "%" + filterOptions.getDescription() + "%"));
-            }
+                    if (filterOptions.getDescription().isPresent()) {
+                        predicates.add(cb.like(root.get("description"), "%" + filterOptions.getDescription() + "%"));
+                    }
 
-            if (filterOptions.getCourseId().isPresent()) {
-                predicates.add(cb.equal(root.get("course").get("id"), filterOptions.getCourseId()));
-            }
+                    if (filterOptions.getCourseId().isPresent()) {
+                        predicates.add(cb.equal(root.get("course").get("id"), filterOptions.getCourseId()));
+                    }
 
-            return cb.and(predicates.toArray(new Predicate[0]));
-        }).stream()
+                    return cb.and(predicates.toArray(new Predicate[0]));
+                }).stream()
                 .map(lectureMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -119,7 +119,7 @@ public class LectureServiceImpl implements LectureService {
         }
     }
 
-        private boolean isUserAuthorizedToModifyLecture(User user, Lecture lecture) {
-            return user.equals(lecture.getCourse().getTeacher()) || user.getRoles().contains(RoleName.ADMIN);
-        }
+    private boolean isUserAuthorizedToModifyLecture(User user, Lecture lecture) {
+        return user.equals(lecture.getCourse().getTeacher()) || user.getRoles().contains(RoleName.ADMIN);
+    }
 }

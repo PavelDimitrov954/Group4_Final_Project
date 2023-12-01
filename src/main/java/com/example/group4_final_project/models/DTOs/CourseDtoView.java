@@ -1,6 +1,5 @@
 package com.example.group4_final_project.models.DTOs;
 
-import com.example.group4_final_project.models.models.Enrollment;
 import com.example.group4_final_project.models.models.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -10,6 +9,7 @@ import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 @Data
@@ -30,7 +30,7 @@ public class CourseDtoView {
     @DateTimeFormat
     private Date startDate;
 
-    private User teacher;
+    private ResponseUser teacher;
     @Nullable
     private Integer rating;
 

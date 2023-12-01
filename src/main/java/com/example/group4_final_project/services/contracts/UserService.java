@@ -1,6 +1,8 @@
 package com.example.group4_final_project.services.contracts;
 
-import com.example.group4_final_project.models.DTOs.*;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
+import com.example.group4_final_project.models.DTOs.UserRegisterDto;
+import com.example.group4_final_project.models.DTOs.UserUpdateDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.User;
 import org.apache.tomcat.websocket.AuthenticationException;

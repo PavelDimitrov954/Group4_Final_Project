@@ -7,8 +7,8 @@ import com.example.group4_final_project.helpers.CourseMapper;
 import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.*;
 import com.example.group4_final_project.models.enums.RoleName;
-import com.example.group4_final_project.models.models.*;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
+import com.example.group4_final_project.models.models.*;
 import com.example.group4_final_project.repositories.*;
 import com.example.group4_final_project.services.contracts.UserService;
 import org.springframework.data.domain.Page;
@@ -37,8 +37,7 @@ public class UserServiceImpl implements UserService {
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final SubmissionRepository submissionRepository;
-    private  final CourseMapper courseMapper;
-
+    private final CourseMapper courseMapper;
 
 
     public UserServiceImpl(UserRepository userRepository,
@@ -61,23 +60,22 @@ public class UserServiceImpl implements UserService {
             throw new AuthorizationException(INVALID_AUTHORIZATION);
         }
 
-        User user = userRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User",id));
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
 
-        if(user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))){
+        if (user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))) {
             Optional<Enrollment> enrollments = enrollmentRepository.findEnrollmentByStudent(user);
             List<CourseDto> courses = new ArrayList<>();
 
-            enrollments.stream().forEach(en->{
+            enrollments.stream().forEach(en -> {
                 CourseDto courseDto = courseMapper.toDto(en.getCourse());
-              courses.add(courseDto);
+                courses.add(courseDto);
             });
 
             ResponseUserStudent userStudent = userMapper.toResponseUserStudent(user);
             userStudent.setCourse(courses);
             return userStudent;
 
-        }
-        else if ((user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER)))){
+        } else if ((user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER)))) {
             List<CourseDto> courses = courseRepository.findAllByTeacher(user).stream().map(courseMapper::toDto).toList();
             ResponseUserTeacher userTeacher = userMapper.toResponseUserTeacher(user);
             userTeacher.setCourse(courses);
@@ -85,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
         }
 
-        return new ResponseUser(user.getFirstName(),user.getLastName(),user.getEmail());
+        return new ResponseUser(user.getFirstName(), user.getLastName(), user.getEmail());
     }
 
     @Override
@@ -99,11 +97,11 @@ public class UserServiceImpl implements UserService {
         String email = filterOptionsUser.getEmail().isPresent()
                 ? filterOptionsUser.getEmail().get() : null;
 
-List<ResponseUser>  responseUsers = userRepository.findUsersByParameters(firstName,
-        lastName, email).stream().map(userMapper::fromUser).collect(Collectors.toList());
-      Page page = new PageImpl(responseUsers);
+        List<ResponseUser> responseUsers = userRepository.findUsersByParameters(firstName,
+                lastName, email).stream().map(userMapper::fromUser).collect(Collectors.toList());
+        Page page = new PageImpl(responseUsers);
 
-     return page;
+        return page;
     }
 
 
@@ -118,11 +116,11 @@ List<ResponseUser>  responseUsers = userRepository.findUsersByParameters(firstNa
         Role role = roleRepository.findByRoleName(RoleName.valueOf(user.getRoleName().toUpperCase()));
 
         if (role == null) {
-          throw new EntityNotFoundException("Role","RoleName",user.getRoleName().toUpperCase());
+            throw new EntityNotFoundException("Role", "RoleName", user.getRoleName().toUpperCase());
         }
 
         if (role.getRoleName().equals(RoleName.TEACHER)) {
-          role = roleRepository.findByRoleName(RoleName.UNAPPROVED_TEACHER) ;
+            role = roleRepository.findByRoleName(RoleName.UNAPPROVED_TEACHER);
         }
 
         Set<Role> roles = new HashSet<>();
@@ -215,23 +213,23 @@ List<ResponseUser>  responseUsers = userRepository.findUsersByParameters(firstNa
         /*if(loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN))){
             throw new AuthorizationException(INVALID_AUTHORIZATION);
         }*/
-        User user = userRepository.findById( id).orElseThrow(()->new EntityNotFoundException("User",id));
-       Set<Role> roles =  user.getRoles();
-       roles.remove(roleRepository.findByRoleName(RoleName.UNAPPROVED_TEACHER));
-       roles.add(roleRepository.findByRoleName(RoleName.TEACHER));
-       user.setRoles(roles);
-       userRepository.save(user);
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
+        Set<Role> roles = user.getRoles();
+        roles.remove(roleRepository.findByRoleName(RoleName.UNAPPROVED_TEACHER));
+        roles.add(roleRepository.findByRoleName(RoleName.TEACHER));
+        user.setRoles(roles);
+        userRepository.save(user);
 
 
     }
 
-    public List<GradeDto> getGrades(int id, User loginUser){
+    public List<GradeDto> getGrades(int id, User loginUser) {
         if (loginUser.getId() != id) {
             throw new AuthorizationException(INVALID_AUTHORIZATION);
         }
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
 
-        if(!user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))){
+        if (!user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))) {
             throw new AuthorizationException(INVALID_AUTHORIZATION);
         }
         List<GradeDto> gradeDto = new ArrayList<>();
@@ -240,14 +238,10 @@ List<ResponseUser>  responseUsers = userRepository.findUsersByParameters(firstNa
         List<Submission> submissionList = submissionRepository.findAllByUser(user).stream().toList();
 
 
-     return null;
-
+        return null;
 
 
     }
-
-
-
 
 
 }

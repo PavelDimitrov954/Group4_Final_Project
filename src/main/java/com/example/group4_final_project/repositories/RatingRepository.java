@@ -16,6 +16,6 @@ public interface RatingRepository extends JpaRepository<Rating, Integer> {
     // Find ratings by student
     List<Rating> findByStudentId(Integer studentId);
 
-     @Query("SELECT AVG(score) FROM Rating WHERE course.id = :courseId")
-     Double findAverageScoreByCourseId(Integer courseId);
+    @Query("SELECT AVG(score) FROM Rating WHERE course.id = :courseId")
+    Double findAverageScoreByCourseId(Integer courseId);
 }

@@ -1,14 +1,10 @@
 package com.example.group4_final_project.models.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.File;
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

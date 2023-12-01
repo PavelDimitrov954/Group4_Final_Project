@@ -1,7 +1,5 @@
 package com.example.group4_final_project.models.DTOs;
 
-import com.example.group4_final_project.models.models.Enrollment;
-import com.example.group4_final_project.models.models.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

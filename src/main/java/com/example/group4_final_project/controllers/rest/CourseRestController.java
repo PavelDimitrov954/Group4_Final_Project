@@ -4,7 +4,7 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
-import com.example.group4_final_project.models.DTOs.CourseDto;
+import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsCourse;
 import com.example.group4_final_project.models.models.CourseTopic;
@@ -61,7 +61,7 @@ public class CourseRestController {
 
     @PostMapping
     public CourseDtoView createCourse(@RequestHeader HttpHeaders header,
-                                      @RequestBody CourseDto courseDto) {
+                                      @RequestBody CreateCourseDto courseDto) {
         try {
             User userWhoCreates = authenticationHelper.tryGetUser(header);
             return

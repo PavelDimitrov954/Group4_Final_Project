@@ -1,10 +1,7 @@
 package com.example.group4_final_project.services.contracts;
 
-import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
 import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
-import com.example.group4_final_project.models.DTOs.LectureDto;
-import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.models.models.User;
 
 import java.util.List;

@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,12 +25,12 @@ public class User {
 
 
     @NotNull
-    @Length(min = 2,max = 20)
+    @Length(min = 2, max = 20)
     @Column(name = "first_name")
     private String firstName;
 
     @NotNull
-    @Length(min = 2,max = 20)
+    @Length(min = 2, max = 20)
     @Column(name = "last_name")
     private String lastName;
 
@@ -57,7 +58,6 @@ public class User {
     private Set<Role> roles;
 
 
-
     @Column(name = "create_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Instant createdAt;
@@ -69,7 +69,7 @@ public class User {
     private Instant updatedAt;
 
     public User() {
-        this.roles=new HashSet<>();
+        this.roles = new HashSet<>();
     }
 }
 

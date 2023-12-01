@@ -3,7 +3,6 @@ package com.example.group4_final_project.services.implementations;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.CourseMapper;
-import com.example.group4_final_project.models.DTOs.CourseDto;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
@@ -121,16 +120,16 @@ public class CourseServiceImpl implements CourseService {
             courseToUpdate.setTopic(topic);
 
         }
-        if (courseDto.getStartDate() != null){
+        if (courseDto.getStartDate() != null) {
             courseToUpdate.setStartDate(courseDto.getStartDate());
         }
-        return courseMapper.toDtoView( courseRepository.save(courseToUpdate));
+        return courseMapper.toDtoView(courseRepository.save(courseToUpdate));
     }
 
     @Override
     @Transactional
     public void delete(User userWhoDeletes, int id) {
-      Course courseToDelete = courseRepository.findById(id).
+        Course courseToDelete = courseRepository.findById(id).
                 orElseThrow(() -> new EntityNotFoundException("Course", id));
         if ((!courseToDelete.getTeacher().equals(userWhoDeletes)) ||
                 userWhoDeletes.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN))) {

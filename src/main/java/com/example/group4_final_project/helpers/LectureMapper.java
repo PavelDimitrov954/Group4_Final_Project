@@ -1,10 +1,10 @@
 package com.example.group4_final_project.helpers;
 
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
+import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.models.Assignment;
 import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.models.models.Lecture;
-import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.repositories.CourseRepository;
 import org.springframework.stereotype.Component;
 

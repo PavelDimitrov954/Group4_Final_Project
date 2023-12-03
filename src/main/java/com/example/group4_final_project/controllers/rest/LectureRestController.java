@@ -4,8 +4,10 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
+import com.example.group4_final_project.models.DTOs.AssignmentDto;
 import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
+import com.example.group4_final_project.models.models.Assignment;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.AssignmentService;
 import com.example.group4_final_project.services.contracts.LectureService;
@@ -41,8 +43,7 @@ public class LectureRestController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<LectureDto>> searchLectures(@RequestHeader HttpHeaders headers,
-                                                           @RequestParam(required = false) Integer courseId,
+    public ResponseEntity<List<LectureDto>> searchLectures(@RequestParam(required = false) Integer courseId,
                                                            @RequestParam(required = false) String title,
                                                            @RequestParam(required = false) String description) {
 
@@ -51,14 +52,6 @@ public class LectureRestController {
         List<LectureDto> filteredLectures = lectureService.getLecturesByFilter(filterOptions);
         return ResponseEntity.ok(filteredLectures);
     }
-
-//    @PostMapping
-//    public ResponseEntity<LectureDto> createLecture(@RequestHeader HttpHeaders headers,
-//                                                    @RequestBody LectureDto lectureDto) {
-//        User user = authenticationHelper.tryGetUser(headers);
-//        authenticationHelper.checkUserRole(user, "TEACHER");
-//        return ResponseEntity.ok(lectureService.createLecture(lectureDto));
-//    }
 
     @PostMapping
     public ResponseEntity<LectureDto> createLecture(@RequestHeader HttpHeaders headers,
@@ -77,8 +70,14 @@ public class LectureRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<LectureDto> getLectureById(@RequestHeader HttpHeaders headers, @PathVariable Integer id) {
-        authenticationHelper.tryGetUser(headers);
-        return ResponseEntity.ok(lectureService.getLectureById(id));
+        try {
+            authenticationHelper.tryGetUser(headers);
+            return ResponseEntity.ok(lectureService.getLectureById(id));
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
     }
 
     @GetMapping
@@ -90,7 +89,7 @@ public class LectureRestController {
     @PutMapping("/{id}")
     public ResponseEntity<LectureDto> updateLecture(@RequestHeader HttpHeaders headers,
                                                     @PathVariable Integer id,
-                                                    @RequestBody LectureDto lectureDto) {
+                                                    @Valid @RequestBody LectureDto lectureDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return ResponseEntity.ok(lectureService.updateLecture(id, lectureDto, user));
@@ -117,46 +116,49 @@ public class LectureRestController {
         }
     }
 
-    @PostMapping("/{lectureId}/submitAssignment")
-    public ResponseEntity<String> submitAssignment(@PathVariable Integer lectureId,
-                                                   @RequestParam("userId") Integer userId,
-                                                   @RequestParam("file") MultipartFile file) throws IOException {
-        /*try {
-            if (file.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is empty");
-            }
-
-            // Additional validations can be added here
-
-            submissionService.submitAssignment(lectureId, userId, file);
-            return ResponseEntity.ok("Assignment '" + .getAssignmentTitle() + "' submitted successfully.");
+    @PostMapping("/{lectureId}/assignment")
+    public ResponseEntity<AssignmentDto> createAssignment(@RequestHeader HttpHeaders headers,
+                                                          @PathVariable Integer lectureId,
+                                                          @RequestBody AssignmentDto assignmentDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return ResponseEntity.ok(assignmentService.save(lectureId, assignmentDto, user));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing file");
-        }*/
-        return null;
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
     }
 
-//    @PutMapping("/{lectureId}/assignment")
-//    public ResponseEntity<String> addAssignmentToLecture(@PathVariable Integer lectureId,
-//                                                   @RequestParam("userId") Integer userId,
-//                                                   @RequestParam("file") MultipartFile file) throws IOException {
-//        try {
-//            if (file.isEmpty()) {
-//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is empty");
-//            }
-//
-//            // Additional validations can be added here
-//
-////            assignmentService.save(file);
-//            return ResponseEntity.ok("Assignment '" + assignmentService.getById(lectureId).getTitle() + "' submitted successfully.");
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        } catch (IOException e) {
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing file");
-//        }
-//    }
+    @PutMapping("/{lectureId}/assignment")
+    public ResponseEntity<AssignmentDto> updateAssignment(@RequestHeader HttpHeaders headers,
+                                                          @PathVariable Integer lectureId,
+                                                          @RequestBody AssignmentDto assignmentDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return ResponseEntity.ok(assignmentService.update(lectureId, assignmentDto, user));
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
 
-
+    @DeleteMapping("/{lectureId}/assignment")
+    public ResponseEntity<Void> deleteAssignment(@RequestHeader HttpHeaders headers,
+                                                 @PathVariable Integer lectureId) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            assignmentService.delete(lectureId, user);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
 }

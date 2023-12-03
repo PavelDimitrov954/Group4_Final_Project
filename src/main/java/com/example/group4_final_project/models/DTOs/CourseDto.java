@@ -1,10 +1,10 @@
 package com.example.group4_final_project.models.DTOs;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
 import java.util.Date;

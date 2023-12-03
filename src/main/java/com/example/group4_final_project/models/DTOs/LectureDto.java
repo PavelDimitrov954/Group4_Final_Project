@@ -15,9 +15,7 @@ public class LectureDto {
     private String title;
     @Size(max = 1000)
     private String description;
-
-    private AssignmentDto assignment;
-
     @URL
     private String videoLink;
+    private AssignmentDto assignment;
 }

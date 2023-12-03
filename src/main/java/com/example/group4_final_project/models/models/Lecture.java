@@ -24,7 +24,7 @@ public class Lecture {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @OneToOne(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Assignment assignment;
 
     @Column(nullable = false, length = 50)

@@ -3,11 +3,14 @@ package com.example.group4_final_project.controllers.rest;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
+import com.example.group4_final_project.helpers.AssignmentHelper;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.models.DTOs.AssignmentDto;
 import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.DTOs.WikiPageDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
+import com.example.group4_final_project.models.models.Assignment;
+import com.example.group4_final_project.models.models.Submission;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.AssignmentService;
 import com.example.group4_final_project.services.contracts.LectureService;
@@ -19,8 +22,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -32,15 +38,17 @@ public class LectureRestController {
     private final AssignmentService assignmentService;
     private final AuthenticationHelper authenticationHelper;
     private final WikiService wikiService;
+    private final AssignmentHelper assignmentHelper;
 
 
     @Autowired
-    public LectureRestController(LectureService lectureService, SubmissionService submissionService, AuthenticationHelper authenticationHelper, AssignmentService assignmentService, WikiService wikiService) {
+    public LectureRestController(LectureService lectureService, SubmissionService submissionService, AuthenticationHelper authenticationHelper, AssignmentService assignmentService, WikiService wikiService, AssignmentHelper assignmentHelper) {
         this.lectureService = lectureService;
         this.submissionService = submissionService;
         this.authenticationHelper = authenticationHelper;
         this.assignmentService = assignmentService;
         this.wikiService = wikiService;
+        this.assignmentHelper = assignmentHelper;
     }
 
     @GetMapping("/search/filter")
@@ -163,9 +171,28 @@ public class LectureRestController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<WikiPageDto>> searchWikipedia(@RequestParam String searchTerm) {
+    @PostMapping("/{lectureId}/upload")
+    public ResponseEntity<String> uploadAssignment(@RequestHeader HttpHeaders headers,
+                                                   @PathVariable Integer lectureId,
+                                                   @RequestParam("file") MultipartFile file) {
         try {
+            User user = authenticationHelper.tryGetUser(headers);
+            String fileUrl = submissionService.handleAssignmentUpload(lectureId, user.getId(), file);
+            return ResponseEntity.ok(fileUrl);
+        } catch (EntityNotFoundException | IOException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
+
+
+    @GetMapping("/search")
+    public ResponseEntity<List<WikiPageDto>> searchWikipedia(@RequestHeader HttpHeaders headers,
+                                                             @RequestParam String searchTerm) {
+        try {
+            authenticationHelper.tryGetUser(headers);
             List<WikiPageDto> summaries = wikiService.searchWikipedia(searchTerm);
             return ResponseEntity.ok(summaries);
         } catch (Exception e) {

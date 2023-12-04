@@ -131,6 +131,16 @@ public class LectureServiceImpl implements LectureService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Assignment getAssignmentByLectureId(Integer lectureId) {
+        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+        if (lecture.isPresent()) {
+            return lecture.get().getAssignment();
+        } else {
+            throw new EntityNotFoundException("Lecture", lectureId);
+        }
+    }
+
 
     private void checkUserRoles(User user, List<RoleName> requiredRoles) {
         boolean hasAnyRole = requiredRoles.stream()

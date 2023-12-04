@@ -10,5 +10,5 @@ public interface SubmissionRepository extends JpaRepository<Submission, Integer>
 
     Optional<Submission> findAllByUser(User user);
 
-    Optional<Object> findByAssignmentIdAndUserId(int id, Integer userId);
+    Optional<Submission> findByAssignmentIdAndUserId(Integer id, Integer userId);
 }

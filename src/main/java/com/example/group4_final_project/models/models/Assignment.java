@@ -18,7 +18,7 @@ public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "assignment_id")
-    private int id;
+    private Integer id;
 
     @OneToOne
     @JoinColumn(name = "lecture_id", nullable = false)

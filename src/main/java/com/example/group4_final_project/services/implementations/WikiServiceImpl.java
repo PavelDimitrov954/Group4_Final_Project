@@ -49,12 +49,12 @@ public class WikiServiceImpl implements WikiService {
                 for (JsonNode result : searchResults) {
                     String title = result.path("title").asText();
                     String snippet = result.path("snippet").asText();
-                    // Using the same snippet for both short and extended for now
+                    String plainSnippet = stripHtmlTags(snippet); // Strip HTML tags
 
                     // Construct the full URL using the title
                     String fullUrl = "https://en.wikipedia.org/wiki/" + URLEncoder.encode(title.replace(" ", "_"), StandardCharsets.UTF_8);
 
-                    wikiPageDtos.add(new WikiPageDto(title, snippet, fullUrl));
+                    wikiPageDtos.add(new WikiPageDto(title, plainSnippet, fullUrl));
                 }
             }
 
@@ -64,5 +64,9 @@ public class WikiServiceImpl implements WikiService {
             // Handle the exception appropriately
             return new ArrayList<>();
         }
+    }
+
+    private String stripHtmlTags(String html) {
+        return html.replaceAll("<[^>]*>", "");
     }
 }

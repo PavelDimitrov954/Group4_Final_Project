@@ -6,22 +6,21 @@ import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.models.DTOs.AssignmentDto;
 import com.example.group4_final_project.models.DTOs.LectureDto;
+import com.example.group4_final_project.models.DTOs.WikiPageDto;
 import com.example.group4_final_project.models.filtering.FilterOptionsLecture;
-import com.example.group4_final_project.models.models.Assignment;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.AssignmentService;
 import com.example.group4_final_project.services.contracts.LectureService;
 import com.example.group4_final_project.services.contracts.SubmissionService;
+import com.example.group4_final_project.services.contracts.WikiService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,17 +31,19 @@ public class LectureRestController {
     private final SubmissionService submissionService;
     private final AssignmentService assignmentService;
     private final AuthenticationHelper authenticationHelper;
+    private final WikiService wikiService;
 
 
     @Autowired
-    public LectureRestController(LectureService lectureService, SubmissionService submissionService, AuthenticationHelper authenticationHelper, AssignmentService assignmentService) {
+    public LectureRestController(LectureService lectureService, SubmissionService submissionService, AuthenticationHelper authenticationHelper, AssignmentService assignmentService, WikiService wikiService) {
         this.lectureService = lectureService;
         this.submissionService = submissionService;
         this.authenticationHelper = authenticationHelper;
         this.assignmentService = assignmentService;
+        this.wikiService = wikiService;
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search/filter")
     public ResponseEntity<List<LectureDto>> searchLectures(@RequestParam(required = false) Integer courseId,
                                                            @RequestParam(required = false) String title,
                                                            @RequestParam(required = false) String description) {
@@ -161,4 +162,15 @@ public class LectureRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<WikiPageDto>> searchWikipedia(@RequestParam String searchTerm) {
+        try {
+            List<WikiPageDto> summaries = wikiService.searchWikipedia(searchTerm);
+            return ResponseEntity.ok(summaries);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

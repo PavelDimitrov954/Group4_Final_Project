@@ -2,6 +2,7 @@ package com.example.group4_final_project.helpers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,17 +12,17 @@ import java.util.Map;
 
 @Component
 public class AssignmentHelper {
-    private static final String CLOUD_NAME = "dnyhome4y";
-    private static final String API_KEY = "619467576556645";
-    private static final String API_SECRET = "OmEQnSsEgC3ZHdDZQkxGR2BeVwA";
 
     private final Cloudinary cloudinary;
 
-    public AssignmentHelper() {
+    public AssignmentHelper(@Value("${cloudinary.cloud-name}") String cloudName,
+                            @Value("${cloudinary.api-key}") String apiKey,
+                            @Value("${cloudinary.api-secret}") String apiSecret) {
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", CLOUD_NAME,
-                "api_key", API_KEY,
-                "api_secret", API_SECRET));
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret
+        ));
     }
 
     public String uploadAssignment(MultipartFile assignmentFile) throws IOException {

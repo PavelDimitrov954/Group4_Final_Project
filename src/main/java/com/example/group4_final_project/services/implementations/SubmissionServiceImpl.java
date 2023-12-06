@@ -4,6 +4,7 @@ import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AssignmentHelper;
 import com.example.group4_final_project.models.models.Assignment;
 import com.example.group4_final_project.models.models.Submission;
+import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.AssignmentRepository;
 import com.example.group4_final_project.repositories.SubmissionRepository;
 import com.example.group4_final_project.repositories.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
@@ -34,36 +36,39 @@ public class SubmissionServiceImpl implements SubmissionService {
         this.assignmentHelper = assignmentHelper;
     }
 
-    public void submitAssignment(Integer lectureId, Integer userId, MultipartFile file) throws IOException {
-        // Find the assignment related to the lecture
+    public Submission save(Submission submission) {
+        return submissionRepository.save(submission);
+    }
+
+    public String handleAssignmentUpload(Integer lectureId, Integer userId, MultipartFile file) throws IOException, EntityNotFoundException {
         Assignment assignment = assignmentRepository.findByLectureId(lectureId)
                 .orElseThrow(() -> new EntityNotFoundException("Assignment for lecture", lectureId));
 
-        // Save the file and get the file path or identifier
-        String filePath = saveFile(file);
+        String fileUrl = assignmentHelper.uploadAssignment(file);
 
-        // Create and save the Submission entity
-        Submission submission = new Submission();
-        submission.setUser(userRepository.findById(userId).orElseThrow());
-        submission.setAssignment(assignment);
-//        submission.setSubmissionFilePath(filePath);
-        submission.setSubmittedAt(Instant.now());
+        // Check for an existing submission
+        Optional<Submission> existingSubmission = submissionRepository.findByAssignmentIdAndUserId(assignment.getId(), userId);
 
-        submissionRepository.save(submission);
-    }
+        Submission submission;
+        if (existingSubmission.isPresent()) {
+            // Update existing submission
+            submission = existingSubmission.get();
+            submission.setSubmissionURL(fileUrl);
+            submission.setSubmittedAt(Instant.now());
+        } else {
+            // Create new submission
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User", userId));
 
-    @Override
-    public Submission getSubmissionByLectureIdAndUserId(Integer lectureId, Integer userId) {
-        return null;
-    }
-
-    private String saveFile(MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("Cannot save an empty file.");
+            submission = new Submission();
+            submission.setUser(user);
+            submission.setAssignment(assignment);
+            submission.setSubmissionURL(fileUrl);
+            submission.setSubmittedAt(Instant.now());
         }
 
-        // Use AssignmentHelper to upload the file and get the file path
-        return assignmentHelper.uploadAssignment(file);
+        save(submission);
+        return fileUrl;
     }
 
 }

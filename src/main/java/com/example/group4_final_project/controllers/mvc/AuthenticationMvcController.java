@@ -6,6 +6,9 @@ import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.UserLoginDto;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
+import com.example.group4_final_project.models.enums.RoleName;
+import com.example.group4_final_project.models.models.User;
+import com.example.group4_final_project.repositories.RoleRepository;
 import com.example.group4_final_project.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,14 +29,16 @@ public class AuthenticationMvcController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public AuthenticationMvcController(UserService userService,
                                        AuthenticationHelper authenticationHelper,
-                                       UserMapper userMapper) {
+                                       UserMapper userMapper, RoleRepository roleRepository) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
+        this.roleRepository = roleRepository;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -57,11 +62,13 @@ public class AuthenticationMvcController {
         }
 
         try {
+
             authenticationHelper.verifyAuthentication(login.getEmail(), login.getPassword());
 
             session.setAttribute("currentUser", login.getEmail());
-
-            //session.setAttribute("isAdmin", user.isAdmin());
+            User user = authenticationHelper.tryGetCurrentUser(session);
+           session.setAttribute("currentUserName", String.format("%s %s", user.getFirstName(),user.getLastName()));
+           session.setAttribute("isStudent", user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT)));
             return "redirect:/";
         } catch (AuthorizationException e) {
             bindingResult.rejectValue("email", "auth_error", e.getMessage());

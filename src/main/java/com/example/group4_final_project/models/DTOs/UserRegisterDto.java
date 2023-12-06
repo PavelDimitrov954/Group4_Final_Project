@@ -25,9 +25,15 @@ public class UserRegisterDto {
     private String email;
 
     @NotNull
+    @Length(min = 8, message = "Length must be more than 8 symbols")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Error")
+
+    private String password;
+
+   /* @NotNull
     @Length(min = 8)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
-    private String password;
+    private String passwordConfirm;*/
 
     @NotNull
     private String roleName;

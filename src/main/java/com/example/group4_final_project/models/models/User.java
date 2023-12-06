@@ -40,7 +40,7 @@ public class User {
     private String email;
 
     @NotNull
-    @Length(min = 8)
+
     @Column(name = "password")
     private String password;
 

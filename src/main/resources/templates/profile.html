@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<form th:replace="~{index.html :: head('Profile')}"></form>
+<body>
+<form th:replace="~{index.html::header}"></form>
+</body>
+
+<section>
+
+</section>
+
+
+
+<div class="profile-container">
+
+    <img th:src="${#strings.isEmpty(user.imageURL) ? '/assets/img/profile.jpg' : user.imageURL}"
+         alt="User Image" class="profile-image"/>
+<br/>
+    <br/>
+
+    <h2 th:text="${user.firstName + ' ' + user.lastName}"></h2>
+
+    <br/>
+    <a th:href="@{/edit-profile}" class="edit-profile-button">Edit Profile</a>
+
+    <br/>
+
+    <div th:if="${#lists.size(courses) > 0}">
+        <h3>Courses:</h3>
+        <ul>
+
+            <li th:each="course : ${courses}" th:text="${course.title}"></li>
+        </ul>
+    </div>
+    <div th:unless="${#lists.size(courses) > 0}">
+        <p>You don't have any courses yet.</p>
+    </div>
+
+
+
+</div>
+</html>

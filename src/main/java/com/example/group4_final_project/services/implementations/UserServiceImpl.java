@@ -59,31 +59,8 @@ public class UserServiceImpl implements UserService {
         if (loginUser.getId() != id) {
             throw new AuthorizationException(INVALID_AUTHORIZATION);
         }
-
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
-
-        if (user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))) {
-            Optional<Enrollment> enrollments = enrollmentRepository.findEnrollmentByStudent(user);
-            List<CourseDto> courses = new ArrayList<>();
-
-            enrollments.stream().forEach(en -> {
-                CourseDto courseDto = courseMapper.toDto(en.getCourse());
-                courses.add(courseDto);
-            });
-
-            ResponseUserStudent userStudent = userMapper.toResponseUserStudent(user);
-            userStudent.setCourse(courses);
-            return userStudent;
-
-        } else if ((user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER)))) {
-            List<CourseDto> courses = courseRepository.findAllByTeacher(user).stream().map(courseMapper::toDto).toList();
-            ResponseUserTeacher userTeacher = userMapper.toResponseUserTeacher(user);
-            userTeacher.setCourse(courses);
-            return userTeacher;
-
-        }
-
-        return new ResponseUser(user.getFirstName(), user.getLastName(), user.getEmail());
+        return userMapper.fromUser(user);
     }
 
     @Override

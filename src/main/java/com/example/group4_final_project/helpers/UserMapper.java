@@ -67,6 +67,7 @@ public class UserMapper {
         responseUserDto.setFirstName(user.getFirstName());
         responseUserDto.setLastName(user.getLastName());
         responseUserDto.setEmail(user.getEmail());
+        responseUserDto.setImageURL(user.getImageURL());
         return responseUserDto;
     }
 

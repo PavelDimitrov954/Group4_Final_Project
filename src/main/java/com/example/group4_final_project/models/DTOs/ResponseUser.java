@@ -17,9 +17,12 @@ public class ResponseUser {
 
     private String email;
 
-    public ResponseUser(String firstName, String lastName, String email) {
+    private String imageURL;
+
+    public ResponseUser(String firstName, String lastName, String email, String imageURL) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.imageURL = imageURL;
     }
 }

@@ -2,6 +2,7 @@ package com.example.group4_final_project.helpers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,8 @@ public class ImageHelper {
     private static final String API_SECRET = "OmEQnSsEgC3ZHdDZQkxGR2BeVwA";
 
     private final Cloudinary cloudinary;
+    /*@Value("${}")
+    private  String test;*/
 
 
     public ImageHelper() {

@@ -40,6 +40,15 @@ public class CourseMapper {
         return dto;
     }
 
+    public CreateCourseDto toCreateDto(Course course) {
+       CreateCourseDto createCourseDto = new CreateCourseDto();
+       createCourseDto.setTitle(course.getTitle());
+       createCourseDto.setDescription(course.getDescription());
+       createCourseDto.setTopic(course.getTopic().getName());
+
+        return createCourseDto;
+    }
+
     public CourseDtoView toDtoView(Course course) {
         CourseDtoView dto = new CourseDtoView();
         dto.setDescription(course.getDescription());

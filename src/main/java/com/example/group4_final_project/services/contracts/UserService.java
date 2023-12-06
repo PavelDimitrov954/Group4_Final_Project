@@ -16,6 +16,7 @@ public interface UserService {
 
     Page<ResponseUser> get(FilterOptionsUser filterOptionsUser, Pageable pageable);
 
+
     ResponseUser register(UserRegisterDto user);
 
     ResponseUser update(User user, int id, UserUpdateDto userRegisterDto);

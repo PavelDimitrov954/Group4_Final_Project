@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:replace="~{index.html :: head('Register')}"></form>
+
+<body class="body">
+<link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+
+
+    <form th:replace="~{index.html::header}"></form>
+ <br/>
+
+<section></section>
+    <div class="form">
+        <div class="thumbnail"><img src=" "/></div>
+
+        <form class="form login-form active-form"  action="#" th:action="@{/auth/register}" th:object="${register}" method="post">
+            <div class="form-control names">
+                <input id="firstName"  placeholder="name" th:field="*{firstName}"  autocomplete="chrome-off"/>
+                <label class="error" th:errors="*{firstName}">First name error placeholder</label>
+                <input id="lastname" placeholder="last name"th:field="*{lastName}" autocomplete="chrome-off">
+                <label class="error" th:errors="*{lastName}">Last name error placeholder</label>
+                <small></small>
+            </div>
+
+
+
+
+            <div class="form-control">
+                <input name="password" class="password-login" th:field="*{password}" type="password" placeholder="password" />
+                <label class="error" th:errors="*{password}">Password error placeholder</label>
+                <small></small>
+            </div>
+            <div class="form-control">
+                <input name="email" class="username-login" th:field="*{email}" type="text" placeholder="email" />
+                <label class="error" th:errors="*{email}">Username error placeholder</label>
+                <small></small>
+            </div>
+            <div class="form-control">
+                <select  class="username-login" autocomplete="chrome-off"  placeholder="account" th:field="*{roleName}">
+
+                    <option
+                            th:value="${'Student'}"
+                            th:text="${'Student'}">
+
+                    </option>
+                    <option
+                            th:value="${'Teacher'}"
+                            th:text="${'Teacher'}">
+
+                    </option>
+
+                </select>
+
+                <label class="error" th:errors="*{roleName}">RoleName  error placeholder</label>
+                <small></small>
+            </div>
+
+            <div class="content">
+                <div class="buttons">
+                    <button id="six" class="submit-button" type="submit">Register</button>
+                </div>
+            </div>
+
+        </form>
+
+
+
+</div>
+
+</body>
+</html>

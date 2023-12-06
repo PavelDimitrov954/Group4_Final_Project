@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface CourseService {
     List<CourseDtoView> getAllCourses(FilterOptionsCourse filterOptionsCourse);
+    List<CreateCourseDto> getAllCoursesBYUser(User user);
 
     CourseDtoView getById(int id);
 

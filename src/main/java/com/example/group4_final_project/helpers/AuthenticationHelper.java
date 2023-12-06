@@ -4,6 +4,7 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,16 @@ public class AuthenticationHelper {
         String password = getPassword(userInfo);
 
         return verifyAuthentication(email, password);
+    }
+
+    public User tryGetCurrentUser(HttpSession session) {
+        String email = (String) session.getAttribute("currentUser");
+
+        if (email == null) {
+            throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+        }
+
+        return userRepository.findByEmail(email);
     }
 
 

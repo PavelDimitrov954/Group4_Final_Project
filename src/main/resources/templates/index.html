@@ -73,7 +73,7 @@
                  <li><a href="#">Deep Drop Down 5</a></li>
                </ul>
             </li>-->
-            <li th:if="isStudent"><a href="#" th:if="${isAuthenticated}" th:href="@{/users}">Grades</a></li>
+            <li th:if="isStudent"><a href="#" th:if="${isAuthenticated}" th:href="@{/users/{id}/grades (id =${responseUser.id})}">Grades</a></li>
             <li><a th:href="@{/users/{id}/update (id =${responseUser.id})}" th:if="${isAuthenticated}">Settings</a></li>
             <li><a href="#" th:if="${isAuthenticated}" th:href="@{/auth/logout}">Logout</a></li>
           </ul>

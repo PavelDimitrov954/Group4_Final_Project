@@ -41,11 +41,12 @@ public class UserServiceImpl implements UserService {
     private final SubmissionRepository submissionRepository;
     private final CourseMapper courseMapper;
     private final ImageHelper imageHelper;
+    private final LectureRepository lectureRepository;
 
 
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository, UserMapper userMapper,
-                           PasswordEncoder passwordEncoder, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, SubmissionRepository submissionRepository, CourseMapper courseMapper, ImageHelper imageHelper) {
+                           PasswordEncoder passwordEncoder, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, SubmissionRepository submissionRepository, CourseMapper courseMapper, ImageHelper imageHelper, LectureRepository lectureRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
         this.submissionRepository = submissionRepository;
         this.courseMapper = courseMapper;
         this.imageHelper = imageHelper;
+        this.lectureRepository = lectureRepository;
     }
 
 
@@ -224,9 +226,58 @@ public class UserServiceImpl implements UserService {
 
         List<Submission> submissionList = submissionRepository.findAllByUser(user).stream().toList();
 
+        Optional<Course> courses = courseRepository.findAllByTeacher(user);
+        if(courses.isEmpty()){
+            return gradeDto;
+        }
 
-        return null;
+        courses.stream().forEach(course -> {
+          GradeDto gradeDto1 = new GradeDto();
+          gradeDto1.setCourseTitle(course.getTitle());
+          Map<Lecture,Double> grades = new LinkedHashMap<>();
+            List<Lecture> lectures = lectureRepository.findAllByCourse(course).stream().toList();
+            lectures.stream().forEach(lecture->{
+                Assignment assignment = lecture.getAssignment();
+                Submission submission = submissionRepository.findByAssignmentAndAndUser(assignment,user);
+                Double grade = submission.getGrade();
+                grades.put(lecture,grade);
 
+            });
+            gradeDto1.setGrades(grades);
+            gradeDto1.setAbvGrade(grades.values().stream()
+                    .mapToDouble(Double::doubleValue)
+                    .average()
+                    .orElse(Double.NaN));
+
+
+
+        });
+
+
+
+        return gradeDto;
+
+
+    }
+
+    @Override
+    public void makeUserAdmin(User admin, int id) {
+        Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN);
+        if (!admin.getRoles().contains(adminRole)) {
+            throw new AuthorizationException("You don't have permission to make users admin.");
+        }
+
+        User userToPromote = userRepository.findById(id).orElseThrow(()->new EntityNotFoundException("User",id));
+
+        if (userToPromote.getRoles().contains(adminRole)) {
+            throw new EntityDuplicateException("User is already an admin: " + userToPromote.getEmail());
+        }
+
+        Set<Role> roles = userToPromote.getRoles();
+        roles.add(adminRole);
+        userToPromote.setRoles(roles);
+
+        userRepository.save(userToPromote);
 
     }
 

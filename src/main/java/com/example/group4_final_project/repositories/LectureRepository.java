@@ -1,5 +1,6 @@
 package com.example.group4_final_project.repositories;
 
+import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.models.models.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -15,4 +16,5 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer>, JpaS
 
     // Find lectures by title containing a string
     Optional<List<Lecture>> findByTitleContaining(String title);
+    Optional<Lecture> findAllByCourse(Course course);
 }

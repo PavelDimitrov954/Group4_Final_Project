@@ -1,4 +1,4 @@
-package com.example.group4_final_project.controllers.mvc;
+package com.example.group4_final_project.controllers.rest;
 
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,5 +1,6 @@
 package com.example.group4_final_project.services.contracts;
 
+import com.example.group4_final_project.models.DTOs.GradeDto;
 import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserService {
 
@@ -31,4 +33,7 @@ public interface UserService {
     ResponseUser addPicture(User user, String url);
 
     void approvedTeacher(int id, User user);
+    public List<GradeDto> getGrades(int id, User loginUser);
+
+    void makeUserAdmin(User admin, int id);
 }

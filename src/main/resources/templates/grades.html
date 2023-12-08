@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:replace="~{index.html :: head('Register')}"></form>
+<body>
+<form th:replace="~{index.html::header}"></form>
+<section>
+
+</section>
+
+<h2>Grades</h2>
+
+<div th:each="gradeDto : ${grades}">
+    <p th:text="${gradeDto.courseTitle}"></p>
+
+    <table>
+        <tr>
+            <th>Lecture</th>
+            <th>Grade</th>
+        </tr>
+
+        <tr th:each="entry : ${gradeDto.grades}">
+            <td th:text="${entry.key.title}"></td>
+            <td th:text="${entry.value}"></td>
+        </tr>
+    </table>
+
+    <p th:text="'Average Grade: ' + ${gradeDto.abvGrade}"></p>
+    <hr/>
+</div>
+
+</body>
+</html>

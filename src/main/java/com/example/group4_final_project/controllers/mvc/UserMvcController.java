@@ -5,6 +5,7 @@ import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
+import com.example.group4_final_project.models.DTOs.GradeDto;
 import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.DTOs.UserUpdateDto;
 import com.example.group4_final_project.models.enums.RoleName;
@@ -24,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -118,6 +120,35 @@ public class UserMvcController {
             return "redirect:/";
 
         } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+
+    }
+    @GetMapping("/{id}/grades")
+    public String grades(@PathVariable int id, HttpSession session, Model model) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+           List<GradeDto> gradeDtoList =  userService.getGrades(id,user);
+           model.addAttribute("grades",gradeDtoList);
+
+            return "grades";
+
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+
+    }
+    @GetMapping("/{id}/makeAdmin")
+    public String makeUserAdmin(Model model, @PathVariable int id, HttpSession session) {
+        try {
+            User admin = authenticationHelper.tryGetCurrentUser(session);
+
+            userService.makeUserAdmin(admin, id);
+            return "redirect:/users/{id}";
+
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
 

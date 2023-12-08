@@ -9,30 +9,57 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
-/* CSS стилове за страницата */
+
+.profile-container -update {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
 .profile-container {
   display: flow;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  margin: 20px;
-  margin-left: 120px; /* Тази промяна ще измести .profile-container в дясната част на страницата */
+  margin-right: 0px;
+  margin-left: 150px;
 }
-
+.update-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile-image-update {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  margin-left: 100px;
+}
 .profile-image {
   width: 150px;
   height: 150px;
-  border-radius: 50%; /* Добавяне на закръгленост на снимката */
-  margin-right: 20px;
+  border-radius: 50%; /
+margin-right: 20px;
 }
 
 .user-info {
-  width: 60%; /* Променете ширината според вашите предпочитания */
+  width: 60%;
 }
 
 .edit-profile-button {
   display: block;
   margin-right: 1250px;
-  padding: 8px 12px; /* Промени големината на padding */
+  padding: 8px 12px;
+  background-color: #5fcf80;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.delete-profile-button {
+  display: block;
+  margin-right: 1300px;
+  margin-left: 100px;
+  padding: 8px 12px;
   background-color: #5fcf80;
   color: #fff;
   text-decoration: none;
@@ -161,7 +188,8 @@
   display: block;
   width: 100%;
 }
-.form input {       outline: 0;
+.form input {
+  outline: 0;
   font-family: system-ui;
   width: 100%;
   margin: 0 0;
@@ -174,7 +202,7 @@
   border-bottom-right-radius: 3px;
   box-sizing: border-box;
   font-size: 20px;
-  /* text-align: center; */
+
   border-radius: 6px;
   color: #0e121ad1;
 }
@@ -204,7 +232,8 @@
   text-decoration: none;
 }
 
-.form select {       outline: 0;
+.form select {
+  outline: 0;
   font-family: system-ui;
   width: 100%;
   margin: 0 0;
@@ -217,21 +246,85 @@
   border-bottom-right-radius: 3px;
   box-sizing: border-box;
   font-size: 20px;
-  /* text-align: center; */
+
   border-radius: 6px;
   color: #0e121ad1;
 }
 
 
+.update{
+  margin-left: 300px;
+}
+.edit {
+  margin: 0;
+  font-size: 1.5em;
+}
 
 
 
 
+.update-profile-button {
+  display: block;
+  margin-right: 20px;
+  margin-left: 0px;
+  padding: 8px 12px;
+  background-color: #5fcf80;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+form.update {
+  max-width: 400px;
+  margin: auto;
+  margin-top: 0px;
+}
+
+
+form.update input[type="text"],
+form.update input[type="password"],
+form.update input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+
+form.update button.update-profile-button {
+  background-color:  #5fcf80;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+}
 
 
 
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
 
 
+form.update label {
+  display:flex;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+
+
+#delete{
+  margin-left: 20px;
+}
 
 
 

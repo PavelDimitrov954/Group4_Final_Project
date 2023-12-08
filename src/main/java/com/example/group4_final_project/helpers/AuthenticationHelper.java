@@ -2,6 +2,7 @@ package com.example.group4_final_project.helpers;
 
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -40,6 +41,7 @@ public class AuthenticationHelper {
     }
 
     public User tryGetCurrentUser(HttpSession session) {
+
         String email = (String) session.getAttribute("currentUser");
 
         if (email == null) {

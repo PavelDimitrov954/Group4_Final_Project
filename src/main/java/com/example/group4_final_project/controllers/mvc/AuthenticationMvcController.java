@@ -2,8 +2,10 @@ package com.example.group4_final_project.controllers.mvc;
 
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
+import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.DTOs.UserLoginDto;
 import com.example.group4_final_project.models.DTOs.UserRegisterDto;
 import com.example.group4_final_project.models.enums.RoleName;
@@ -46,10 +48,22 @@ public class AuthenticationMvcController {
         return session.getAttribute("currentUser") != null;
     }
 
+
+    @ModelAttribute("responseUser")
+    public ResponseUser responseUser(HttpSession session) {
+        try {
+            return userMapper.fromUser(authenticationHelper.tryGetCurrentUser(session));
+        }catch (EntityNotFoundException | AuthorizationException e){
+            return new ResponseUser();
+        }
+
+
+    }
+
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("login", new UserLoginDto());
-        model.addAttribute("register", new UserRegisterDto());
+
         return "login";
     }
 
@@ -63,12 +77,15 @@ public class AuthenticationMvcController {
 
         try {
 
-            authenticationHelper.verifyAuthentication(login.getEmail(), login.getPassword());
+           User user = authenticationHelper.verifyAuthentication(login.getEmail(), login.getPassword());
+
 
             session.setAttribute("currentUser", login.getEmail());
-            User user = authenticationHelper.tryGetCurrentUser(session);
-           session.setAttribute("currentUserName", String.format("%s %s", user.getFirstName(),user.getLastName()));
-           session.setAttribute("isStudent", user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT)));
+
+
+            session.setAttribute("isStudent", user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT)));
+
+
             return "redirect:/";
         } catch (AuthorizationException e) {
             bindingResult.rejectValue("email", "auth_error", e.getMessage());

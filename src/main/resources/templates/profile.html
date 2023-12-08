@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <form th:replace="~{index.html :: head('Profile')}"></form>
 <body>
 <form th:replace="~{index.html::header}"></form>
-</body>
+
 
 <section>
 
@@ -21,7 +21,7 @@
     <h2 th:text="${user.firstName + ' ' + user.lastName}"></h2>
 
     <br/>
-    <a th:href="@{/edit-profile}" class="edit-profile-button">Edit Profile</a>
+    <a th:href="@{/users/{id}/update (id =${responseUser.id})}" class="edit-profile-button">Edit Profile</a>
 
     <br/>
 
@@ -39,4 +39,5 @@
 
 
 </div>
+</body>
 </html>

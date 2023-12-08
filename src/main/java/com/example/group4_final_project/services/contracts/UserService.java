@@ -9,17 +9,19 @@ import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+
 public interface UserService {
 
 
-    ResponseUser get(int id, User user);
+    ResponseUser get(int id);
 
     Page<ResponseUser> get(FilterOptionsUser filterOptionsUser, Pageable pageable);
 
 
     ResponseUser register(UserRegisterDto user);
 
-    ResponseUser update(User user, int id, UserUpdateDto userRegisterDto);
+    ResponseUser update(User user, int id, UserUpdateDto userRegisterDto) throws IOException;
 
     ResponseUser delete(int id, User user) throws AuthenticationException;
 

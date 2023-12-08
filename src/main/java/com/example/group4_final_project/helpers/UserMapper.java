@@ -54,40 +54,46 @@ public class UserMapper {
 
     public User fromDto(int id, UserUpdateDto userUpdateDto) {
 
+
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
-        user.setFirstName(userUpdateDto.getFirstName());
-        user.setLastName(userUpdateDto.getLastName());
+        if(!userUpdateDto.getFirstName().trim().isEmpty()){
+            user.setFirstName(userUpdateDto.getFirstName());
+        }
+        if(!userUpdateDto.getLastName().trim().isEmpty()){
+            user.setLastName(userUpdateDto.getLastName());
+        }
+
         user.setUpdatedAt(Instant.now());
         return user;
+    }
+    public User fromDto(ResponseUser responseUser) {
+
+
+        return userRepository.findByEmail(responseUser.getEmail());
     }
 
     public ResponseUser fromUser(User user) {
 
-        ResponseUser responseUserDto = new ResponseUser();
-        responseUserDto.setFirstName(user.getFirstName());
-        responseUserDto.setLastName(user.getLastName());
-        responseUserDto.setEmail(user.getEmail());
-        responseUserDto.setImageURL(user.getImageURL());
-        return responseUserDto;
+        ResponseUser responseUser = new ResponseUser();
+        responseUser.setId(user.getId());
+        responseUser.setFirstName(user.getFirstName());
+        responseUser.setLastName(user.getLastName());
+        responseUser.setEmail(user.getEmail());
+        responseUser.setImageURL(user.getImageURL());
+        responseUser.setRoles(user.getRoles());
+        return responseUser;
     }
 
-    public ResponseUserStudent toResponseUserStudent(User user) {
 
-        ResponseUserStudent responseUserStudent = new ResponseUserStudent();
-        responseUserStudent.setFirstName(user.getFirstName());
-        responseUserStudent.setLastName(user.getLastName());
-        responseUserStudent.setEmail(user.getEmail());
 
-        return responseUserStudent;
-    }
 
-    public ResponseUserTeacher toResponseUserTeacher(User user) {
-
-        ResponseUserTeacher responseUserTeacher = new ResponseUserTeacher();
-        responseUserTeacher.setFirstName(user.getFirstName());
-        responseUserTeacher.setLastName(user.getLastName());
-        responseUserTeacher.setEmail(user.getEmail());
-
-        return responseUserTeacher;
+    public UserUpdateDto toUpdateDto(User user) {
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setId(user.getId());
+        userUpdateDto.setFirstName(user.getFirstName());
+        userUpdateDto.setLastName(user.getLastName());
+        userUpdateDto.setPassword(user.getPassword());
+       // userUpdateDto.setImageURL(user.getImageURL());
+     return userUpdateDto;
     }
 }

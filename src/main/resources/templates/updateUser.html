@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:replace="~{index.html :: head('Update')}"></form>
+<body>
+<form th:replace="~{index.html::header}"></form>
+<section>
+
+</section>
+<div class="update-view">
+<div class="profile-container-update" >
+
+    <img  th:src="${#strings.isEmpty(responseUser.imageURL) ? '/assets/img/profile.jpg' : responseUser.imageURL}"
+         alt="User Image" class="profile-image-update"/>
+</div>
+  <h2 class="edit" th:text="${responseUser.firstName + ' ' + responseUser.lastName}"></h2>
+
+
+
+
+<form class="update" th:action="@{/users/{id}/update (id =${user.id})}" th:object="${user}" method="post" enctype="multipart/form-data">
+    <div>
+    <label >First Name:</label>
+    <input type="text"  th:field="*{firstName}" th:placeholder="${responseUser.firstName}"   autocomplete="chrome-off" >
+    <label class="error" th:errors="*{firstName}">First name error placeholder</label>
+    </div>
+
+
+    <div >
+    <label >Last Name:</label>
+        <input  type="text" id="last-name"  name="lastName" th:field="*{lastName}" th:placeholder="${responseUser.lastName}"  >
+    <label class="error" th:errors="*{lastName}">Last name error placeholder</label>
+    </div>
+
+    <div>
+    <label >Password:</label><input type="password" id="password" name="password" placeholder="password" th:field="*{password}"  >
+    <label class="error" th:errors="*{password}">Password error placeholder</label>
+    </div>
+
+    <div>
+    <label >Profile Picture:</label>
+    <input type="file" id="profile-picture" name="profile-picture" th:field="*{image}" accept="image/*">
+
+    </div>
+
+
+    <button class="update-profile-button" type="submit" >Save Changes</button>
+
+</form>
+</div>
+<br/>
+<br/>
+
+<div>
+    <p id="delete">If you want to delete your profile, please click here</p>
+    <a th:href="@{/users/{id}/delete (id =${responseUser.id})}" class="delete-profile-button">Delete Profile</a>
+   <!-- <a th:href="@{/users/{id}/makeAdmin (id =${responseUser.id})}" class="delete-profile-button">Make Admin</a>-->
+</div>
+</body>
+</html>

@@ -58,8 +58,8 @@ public class UserRestController {
     public ResponseUser get(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            ResponseUser responseUser = userService.get(id, user);
-            return userService.get(id, user);
+            ResponseUser responseUser = userService.get(id);
+            return userService.get(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
@@ -96,6 +96,8 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

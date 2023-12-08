@@ -4,6 +4,7 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.CourseMapper;
+import com.example.group4_final_project.helpers.ImageHelper;
 import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.*;
 import com.example.group4_final_project.models.enums.RoleName;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -38,11 +40,12 @@ public class UserServiceImpl implements UserService {
     private final EnrollmentRepository enrollmentRepository;
     private final SubmissionRepository submissionRepository;
     private final CourseMapper courseMapper;
+    private final ImageHelper imageHelper;
 
 
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository, UserMapper userMapper,
-                           PasswordEncoder passwordEncoder, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, SubmissionRepository submissionRepository, CourseMapper courseMapper) {
+                           PasswordEncoder passwordEncoder, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, SubmissionRepository submissionRepository, CourseMapper courseMapper, ImageHelper imageHelper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
@@ -51,14 +54,13 @@ public class UserServiceImpl implements UserService {
         this.enrollmentRepository = enrollmentRepository;
         this.submissionRepository = submissionRepository;
         this.courseMapper = courseMapper;
+        this.imageHelper = imageHelper;
     }
 
 
     @Override
-    public ResponseUser get(int id, User loginUser) {
-        if (loginUser.getId() != id) {
-            throw new AuthorizationException(INVALID_AUTHORIZATION);
-        }
+    public ResponseUser get(int id) {
+
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
         return userMapper.fromUser(user);
     }
@@ -109,11 +111,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseUser update(User user, int id, UserUpdateDto userUpdateDto) {
+    public ResponseUser update(User user, int id, UserUpdateDto userUpdateDto) throws IOException {
         boolean isDuplicate = true;
-
         User updateUser = userMapper.fromDto(id, userUpdateDto);
-        updateUser.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+
+        if(userUpdateDto.getPassword()!=null){
+            updateUser.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+        }
+
+        if(!userUpdateDto.getImage().isEmpty()){
+            System.out.println("2");
+            user.setImageURL(imageHelper.uploadImage(userUpdateDto.getImage()));
+        }
 
         if (user.getId() != id || !user.getEmail().equals(updateUser.getEmail())) {
             throw new AuthorizationException(INVALID_AUTHORIZATION);
@@ -141,13 +150,14 @@ public class UserServiceImpl implements UserService {
     public ResponseUser delete(int id, User user) {
         User deleteUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User", id));
-        if (user.getId() != id || !user.getEmail().equals(deleteUser.getEmail())) {
-            throw new AuthorizationException(INVALID_AUTHORIZATION);
+        if (user.getId() == id && user.getEmail().equals(deleteUser.getEmail())
+                || user.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN))) {
+            ResponseUser responseUserDto = userMapper.fromUser(deleteUser);
+            userRepository.delete(deleteUser);
+            return responseUserDto;
         }
-        ResponseUser responseUserDto = userMapper.fromUser(deleteUser);
-        userRepository.delete(deleteUser);
 
-        return responseUserDto;
+        throw new AuthorizationException(INVALID_AUTHORIZATION);
     }
 
     @Override

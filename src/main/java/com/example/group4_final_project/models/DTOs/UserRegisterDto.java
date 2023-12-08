@@ -26,7 +26,8 @@ public class UserRegisterDto {
 
     @NotNull
     @Length(min = 8, message = "Length must be more than 8 symbols")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Error")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "The password must be  should contain capital letter, digit, and special symbol.")
 
     private String password;
 

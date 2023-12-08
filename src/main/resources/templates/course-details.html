@@ -10,10 +10,12 @@
 
 <header th:replace="index :: header"></header>
 
-<main role="main" class="container mt-5" style="padding-top: 100px;">
-    <div class="page-title">
+<main role="main" class="container mt-5">
+    <div class="breadcrumbs">
+        <div class="container">
         <h1 th:text="${course.title}">Course Title</h1>
         <p th:text="${course.description}">Course Description</p>
+        </div>
     </div>
     <section aria-labelledby="lecturesSection">
         <h2 id="lecturesSection" class="page-title">Lectures</h2>

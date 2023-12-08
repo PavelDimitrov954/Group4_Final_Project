@@ -311,11 +311,15 @@
                 <p class="price">$169</p> <!-- You might want to make this dynamic as well -->
               </div>
 
-              <h3>
-                <a th:href="${isAuthenticated} ? @{/courses/{courseId}/details(courseId=${course.courseId})} : '#'"
-                   th:onclick="${isAuthenticated} ? '' : 'alert(\'Please log in to view course details.\')'"
-                   th:text="${course.title}">Course Title</a>
-              </h3>
+              <div th:if="${isAuthenticated}">
+                <h3>
+                  <a th:href="@{/courses/{courseId}/details(courseId=${course.courseId})}" th:text="${course.title}">Course Title</a>
+                </h3>
+              </div>
+              <div th:unless="${isAuthenticated}">
+                <h3 th:text="${course.title}">Course Title</h3>
+              </div>
+
               <p th:text="${course.description}">Course description goes here...</p>
               <div class="trainer d-flex justify-content-between align-items-center">
                 <!-- Trainer Details -->

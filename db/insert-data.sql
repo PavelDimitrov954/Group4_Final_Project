@@ -6,10 +6,10 @@ VALUES ('STUDENT'),
 INSERT INTO virtual_teacher.users ( first_name, last_name, email,password,create_at,update_at)
 VALUES ('Todor', 'Andonov', 'todor@company.com','pass4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO courses (title, topic_id, description, start_date, status, teacher_id, created_at, updated_at)
-VALUES ('Introduction to Java', 1, 'This course covers basic Java programming concepts.', '2021-01-15', 'published', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO virtual_teacher.courses (title, topic_id, description, start_date, status, teacher_id, created_at, updated_at)
+VALUES ('Introduction to Java', 1, 'This course covers basic Java programming concepts.', '2021-01-15', 'published', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO course_topics(name)
+INSERT INTO virtual_teacher.course_topics(name)
 VALUE ('ADVANCED');
 
 INSERT INTO virtual_teacher.courses (title, topic_id, description, start_date, status, teacher_id)

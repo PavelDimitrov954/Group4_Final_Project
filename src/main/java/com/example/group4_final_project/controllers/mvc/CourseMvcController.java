@@ -3,7 +3,9 @@ package com.example.group4_final_project.controllers.mvc;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
+import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.LectureDto;
+import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.DTOs.WikiPageDto;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.services.contracts.CourseService;
@@ -11,7 +13,6 @@ import com.example.group4_final_project.services.contracts.LectureService;
 import com.example.group4_final_project.services.contracts.SubmissionService;
 import com.example.group4_final_project.services.contracts.WikiService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,26 +30,22 @@ public class CourseMvcController {
     private final UserMapper userMapper;
 
     private final AuthenticationHelper authenticationHelper;
-
-    public CourseMvcController(UserMapper userMapper, AuthenticationHelper authenticationHelper) {
-        this.userMapper = userMapper;
-        this.authenticationHelper = authenticationHelper;
-    }
-
     private final CourseService courseService;
     private final LectureService lectureService;
     private final SubmissionService submissionService;
-    private final AuthenticationHelper authenticationHelper;
+
     private final WikiService wikiService;
 
-    @Autowired
-    public CourseMvcController(CourseService courseService, LectureService lectureService, SubmissionService submissionService, AuthenticationHelper authenticationHelper, WikiService wikiService) {
+    public CourseMvcController(UserMapper userMapper, AuthenticationHelper authenticationHelper,
+                               CourseService courseService, LectureService lectureService, SubmissionService submissionService, WikiService wikiService) {
+        this.userMapper = userMapper;
+        this.authenticationHelper = authenticationHelper;
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.submissionService = submissionService;
-        this.authenticationHelper = authenticationHelper;
         this.wikiService = wikiService;
     }
+
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
@@ -59,23 +56,20 @@ public class CourseMvcController {
     public ResponseUser responseUser(HttpSession session) {
         try {
             return userMapper.fromUser(authenticationHelper.tryGetCurrentUser(session));
-        }catch (EntityNotFoundException | AuthorizationException e){
+        } catch (EntityNotFoundException | AuthorizationException e) {
             return new ResponseUser();
         }
+    }
 
     @GetMapping("/courses")
     public String showCoursePage(Model model) {
         var courses = courseService.getAllCourses();
         model.addAttribute("courses", courses);
-
-    }
-
-    @GetMapping
-    public String showCoursePage() {
-
-
         return "courses";
+
     }
+
+
     @GetMapping("/courses/{courseId}/details")
     public String getCourseDetails(@PathVariable Integer courseId, Model model) {
         var course = courseService.getById(courseId);

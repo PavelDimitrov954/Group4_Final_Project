@@ -4,10 +4,8 @@ import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.ResponseUser;
-import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.repositories.RoleRepository;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
-import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.services.contracts.CourseService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -26,18 +24,18 @@ public class HomeMvcController {
 
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final CourseService courseService;
 
-    public HomeMvcController(AuthenticationHelper authenticationHelper, RoleRepository roleRepository, UserMapper userMapper) {
+    public HomeMvcController(AuthenticationHelper authenticationHelper, RoleRepository roleRepository, UserMapper userMapper, CourseService courseService) {
         this.authenticationHelper = authenticationHelper;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
-    }
-
-    private final CourseService courseService;
-
-    public HomeMvcController(CourseService courseService) {
         this.courseService = courseService;
     }
+
+
+
+
 
 
     @ModelAttribute("isAuthenticated")

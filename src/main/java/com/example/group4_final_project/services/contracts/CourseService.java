@@ -21,4 +21,6 @@ public interface CourseService {
     CourseDtoView updateCourse(User userWhoUpdates, int courseId, UpdateCourseDto courseDto);
 
     void delete(User userWhoDeletes, int id);
+
+    List<CourseDtoView> getTopCoursesByRating(int limit);
 }

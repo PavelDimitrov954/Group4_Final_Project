@@ -13,12 +13,14 @@ import com.example.group4_final_project.models.models.Role;
 import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.LectureRepository;
 import com.example.group4_final_project.services.contracts.LectureService;
+import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,18 +52,6 @@ public class LectureServiceImpl implements LectureService {
         }
         return lectureMapper.toDto(lectureRepository.save(lecture));
     }
-//    @Transactional
-//public LectureDto createLecture(LectureDto lectureDto) {
-//    Lecture lecture = convertToEntity(lectureDto);
-//    if (lectureDto.getAssignment() != null) {
-//        Assignment assignment = convertToEntity(lectureDto.getAssignment());
-//        assignment.setLecture(lecture); // Set the lecture reference
-//        lecture.setAssignment(assignment);
-//    }
-//    Lecture savedLecture = lectureRepository.save(lecture);
-//    return convertToDto(savedLecture);
-//}
-
 
     @Override
     @Transactional
@@ -103,6 +93,16 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
+    public List<LectureDto> getLecturesByCourseId(Integer courseId) {
+        // Using Optional to handle the case where no lectures are found
+        return lectureRepository.findByCourseId(courseId)
+                .map(lectures -> lectures.stream()
+                        .map(lectureMapper::toDto)
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList()); // Return an empty list if no lectures are found
+    }
+
+    @Override
     public List<LectureDto> getAllLectures() {
         return lectureRepository.findAll().stream()
                 .map(lectureMapper::toDto)
@@ -123,13 +123,19 @@ public class LectureServiceImpl implements LectureService {
                     filterOptions.getCourseId().ifPresent(courseId ->
                             predicates.add(cb.equal(root.get("course").get("id"), courseId)));
 
-                    query.orderBy(/* add your Sort criteria here */);
+                    // Adding sort criteria
+                    if (filterOptions.getSortBy() != null) {
+                        Order order = filterOptions.isAsc() ? cb.asc(root.get(filterOptions.getSortBy()))
+                                : cb.desc(root.get(filterOptions.getSortBy()));
+                        query.orderBy(order);
+                    }
 
                     return cb.and(predicates.toArray(new Predicate[0]));
                 }).stream()
                 .map(lectureMapper::toDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public Assignment getAssignmentByLectureId(Integer lectureId) {

@@ -1,0 +1,7 @@
+<!-- src/main/resources/templates/fragments/searchResults.html -->
+<ul>
+  <li th:each="result : ${searchResults}">
+    <a th:href="${result.url}" th:text="${result.title}" target="_blank"></a>
+    <p th:text="${result.snippet}"></p>
+  </li>
+</ul>

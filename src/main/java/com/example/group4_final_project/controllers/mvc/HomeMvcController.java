@@ -6,11 +6,17 @@ import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.repositories.RoleRepository;
+import com.example.group4_final_project.models.DTOs.CourseDtoView;
+import com.example.group4_final_project.models.models.Course;
+import com.example.group4_final_project.services.contracts.CourseService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -25,6 +31,12 @@ public class HomeMvcController {
         this.authenticationHelper = authenticationHelper;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
+    }
+
+    private final CourseService courseService;
+
+    public HomeMvcController(CourseService courseService) {
+        this.courseService = courseService;
     }
 
 
@@ -47,8 +59,9 @@ public class HomeMvcController {
 
 
     @GetMapping
-    public String showHomePage() {
-
+    public String showHomePage(Model model) {
+        List<CourseDtoView> courses = courseService.getAllCourses(); // Fetch courses from the service
+        model.addAttribute("courses", courses);
 
         return "index";
     }
@@ -65,3 +78,4 @@ public class HomeMvcController {
         return "contact";
     }
 }
+

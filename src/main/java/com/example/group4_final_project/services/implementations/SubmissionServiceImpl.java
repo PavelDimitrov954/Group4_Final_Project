@@ -25,9 +25,6 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final UserRepository userRepository;
     private final AssignmentHelper assignmentHelper;
 
-    @Value("${file.storage.location}")
-    private String fileStorageLocation;  // Directory for file storage
-
     @Autowired
     public SubmissionServiceImpl(SubmissionRepository submissionRepository, AssignmentRepository assignmentRepository, UserRepository userRepository, AssignmentHelper assignmentHelper) {
         this.submissionRepository = submissionRepository;

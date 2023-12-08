@@ -20,6 +20,7 @@ public class LectureMapper {
 
     public LectureDto toDto(Lecture lecture) {
         LectureDto dto = new LectureDto();
+        dto.setId(lecture.getId());
         dto.setCourseId(lecture.getCourse().getId());
         dto.setTitle(lecture.getTitle());
         dto.setDescription(lecture.getDescription());

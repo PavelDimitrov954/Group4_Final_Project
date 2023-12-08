@@ -1822,3 +1822,108 @@ section {
   color: #fff;
   text-decoration: none;
 }
+
+.lecture-title {
+  cursor: pointer;
+  color: #5fcf80; /* Bootstrap primary color, for example */
+  text-decoration: none; /* Removes the underline text decoration */
+}
+
+.lecture-title:hover {
+  text-decoration: underline; /* Adds an underline on hover to indicate clickability */
+}
+
+.page-title {
+  padding-top: 100px; /* Adjust this value to match the height of your fixed header */
+  margin-top: -100px; /* This negative margin pulls the title back up to where it should be */
+}
+
+header {
+  z-index: 10; /* Ensure this is higher than the z-index of the content if it's not already set */
+}
+
+.responsive-iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9; /* This sets the aspect ratio to 16:9 */
+}
+
+.responsive-iframe-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+.responsive-iframe-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: #f7f7f7; /* or any other warm color */
+  color: #505050; /* softer than black for text */
+  font-family: 'Lato', sans-serif; /* a friendly, readable font */
+}
+
+.page-title {
+  color: #333; /* warmer text color */
+  text-align: center; /* center the title if it fits your design */
+  padding-top: 2rem; /* to fix the issue with header overlap */
+  margin-top: -2rem;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  border: none; /* clean look */
+  margin-bottom: 1rem; /* space between cards */
+}
+
+.card-header {
+  background-color: #e9ecef; /* light background for the header */
+  border-bottom: 1px solid #ddd; /* subtle separation */
+}
+
+.card-body {
+  background-color: white; /* clear and clean background */
+}
+
+.btn-toggle {
+  background-color: #f8f9fa; /* light background for toggle button */
+  color: #333; /* text color for button */
+}
+
+.btn-toggle:hover {
+  background-color: #e2e6ea; /* hover effect for button */
+}
+
+.alert-info {
+  background-color: #d1ecf1; /* soft background for alerts */
+  border-color: #bee5eb; /* border to match */
+  color: #0c5460; /* text color that is easy on the eyes */
+}
+
+/* Additional global padding for a more spacious feel */
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Style for file upload button */
+.btn-primary {
+  background-color: #007bff; /* Bootstrap primary color */
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.embed-responsive-item {
+  width: 100%; /* Full width */
+  height: 450px; /* Adjust height as needed */
+}

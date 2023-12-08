@@ -52,15 +52,19 @@ public class LectureRestController {
     }
 
     @GetMapping("/search/filter")
-    public ResponseEntity<List<LectureDto>> searchLectures(@RequestParam(required = false) Integer courseId,
-                                                           @RequestParam(required = false) String title,
-                                                           @RequestParam(required = false) String description) {
+    public ResponseEntity<List<LectureDto>> searchLectures(
+            @RequestParam(required = false) Integer courseId,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false, defaultValue = "title") String sortBy, // Replace with a valid field name
+            @RequestParam(required = false, defaultValue = "true") boolean asc) {
 
-        FilterOptionsLecture filterOptions = new FilterOptionsLecture(courseId, title, description);
-
+        FilterOptionsLecture filterOptions = new FilterOptionsLecture(courseId, title, description, sortBy, asc);
         List<LectureDto> filteredLectures = lectureService.getLecturesByFilter(filterOptions);
         return ResponseEntity.ok(filteredLectures);
     }
+
+
 
     @PostMapping
     public ResponseEntity<LectureDto> createLecture(@RequestHeader HttpHeaders headers,

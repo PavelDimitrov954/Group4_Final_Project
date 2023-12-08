@@ -94,13 +94,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CreateCourseDto> getAllCoursesBYUser(User user) {
 
-        if(user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))){
-           return courseRepository
+        if (user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
+            return courseRepository
                     .findAllByTeacher(user).stream().map(courseMapper::toCreateDto).toList();
-        }
-        else if(user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))){
+        } else if (user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))) {
             Optional<Enrollment> enrollments = enrollmentRepository.findEnrollmentByStudent(user);
-            return enrollments.stream().map(e->courseMapper.toCreateDto(e.getCourse())).toList();
+            return enrollments.stream().map(e -> courseMapper.toCreateDto(e.getCourse())).toList();
         }
         return new ArrayList<>();
     }
@@ -159,4 +158,9 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.delete(courseToDelete);
 
     }
+
+    @Override
+    public List<CourseDtoView> getTopCoursesByRating(int limit) {
+        return courseMapper.toDtoViews(courseRepository.findTopCoursesByRating(limit));
+    };
 }

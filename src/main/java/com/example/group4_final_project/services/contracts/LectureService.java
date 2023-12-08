@@ -15,6 +15,7 @@ public interface LectureService {
     void deleteLecture(Integer id, User user);
 
     LectureDto getLectureById(Integer id);
+    List<LectureDto> getLecturesByCourseId(Integer courseId);
 
     List<LectureDto> getAllLectures();
 

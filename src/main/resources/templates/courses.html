@@ -55,7 +55,7 @@
                                     </div>
 
                                 </div>
-                                <a th:href="@{/courses/{courseId}/details(courseId=${course.getCourseId()})}">View Details</a>
+                                <a th:if="${isAuthenticated}" th:href="@{/courses/{courseId}/details(courseId=${course.getCourseId()})}">View Details</a>
                                 <!-- <i class="bx bx-user" th:text="${'Enrollments: ' + course.getEnrollments().size()}"> -->
                                 <p th:text="${'Enrollments: ' + course.getEnrollments().size()}">Course
                                     enrollments

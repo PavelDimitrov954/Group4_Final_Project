@@ -58,6 +58,7 @@
         <li><a th:unless="${isAuthenticated}" th:href="@{/auth/login}" href="login.html">Login</a></li>
         <li><a th:unless="${isAuthenticated}"  th:href="@{/auth/register}" href="register.html">Register</a></li>
         <li><a th:href="@{/contact}" href="contact.html">Contact</a></li>
+        <li><a th:if="${isAuthenticated and (#lists.contains(responseUser.roles, teacher) or #lists.contains(responseUser.roles, admin))}" th:href="@{/users/search}" >Users</a></li>
 
 
         <li  th:if="${isAuthenticated}" class="dropdown">
@@ -73,7 +74,7 @@
                  <li><a href="#">Deep Drop Down 5</a></li>
                </ul>
             </li>-->
-            <li th:if="isStudent"><a href="#" th:if="${isAuthenticated}" th:href="@{/users/{id}/grades (id =${responseUser.id})}">Grades</a></li>
+            <li th:if="${#lists.contains(responseUser.roles, student)}"><a href="#" th:if="${isAuthenticated}" th:href="@{/users/{id}/grades (id =${responseUser.id})}">Grades</a></li>
             <li><a th:href="@{/users/{id}/update (id =${responseUser.id})}" th:if="${isAuthenticated}">Settings</a></li>
             <li><a href="#" th:if="${isAuthenticated}" th:href="@{/auth/logout}">Logout</a></li>
           </ul>

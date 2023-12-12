@@ -18,7 +18,8 @@ public interface UserService {
 
     ResponseUser get(int id);
 
-    Page<ResponseUser> get(FilterOptionsUser filterOptionsUser, Pageable pageable);
+
+    List<ResponseUser> get(FilterOptionsUser filterOptionsUser, User loginUser);
 
 
     ResponseUser register(UserRegisterDto user);

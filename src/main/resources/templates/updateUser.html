@@ -3,9 +3,7 @@
 <form th:replace="~{index.html :: head('Update')}"></form>
 <body>
 <form th:replace="~{index.html::header}"></form>
-<section>
-
-</section>
+<section></section>
 
 <div class="update-view">
 <div class="profile-container-update" >
@@ -54,7 +52,8 @@
 <div>
     <p id="delete">If you want to delete your profile, please click here</p>
     <a th:href="@{/users/{id}/delete (id =${responseUser.id})}" class="delete-profile-button">Delete Profile</a>
-   <!-- <a th:href="@{/users/{id}/makeAdmin (id =${responseUser.id})}" class="delete-profile-button">Make Admin</a>-->
 </div>
+
+
 </body>
 </html>

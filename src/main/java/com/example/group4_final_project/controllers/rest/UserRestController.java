@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -41,16 +42,14 @@ public class UserRestController {
 
 
     @GetMapping
-    public Page<ResponseUser> get(@RequestHeader HttpHeaders headers,
+    public List<ResponseUser> get(@RequestHeader HttpHeaders headers,
                                   @RequestParam(required = false) String email,
                                   @RequestParam(required = false) String firstName,
-                                  @RequestParam(required = false) String lastName,
-                                  // @SortDefault(sort = "update_at", direction = Sort.Direction.DESC)
-                                  Pageable pageable) {
-        authenticationHelper.tryGetUser(headers);
+                                  @RequestParam(required = false) String lastName) {
+       User user =  authenticationHelper.tryGetUser(headers);
         FilterOptionsUser filterOptionsUser = new FilterOptionsUser(email, firstName, lastName);
 
-        return userService.get(filterOptionsUser, pageable);
+        return userService.get(filterOptionsUser,user );
 
     }
 

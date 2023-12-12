@@ -83,8 +83,6 @@ public class AuthenticationMvcController {
             session.setAttribute("currentUser", login.getEmail());
 
 
-            session.setAttribute("isStudent", user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT)));
-
 
             return "redirect:/";
         } catch (AuthorizationException e) {

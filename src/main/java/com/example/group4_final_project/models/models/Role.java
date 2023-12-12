@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 
 @Data
 @NoArgsConstructor
@@ -25,5 +27,17 @@ public class Role {
 
     public Role(RoleName roleName) {
         this.roleName = roleName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Role role)) return false;
+        return id == role.id && roleName == role.roleName;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, roleName);
     }
 }

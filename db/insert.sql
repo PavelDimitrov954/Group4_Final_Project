@@ -1,4 +1,6 @@
--- Insert into course_topics
+use virtual_teacher;
+
+
 INSERT INTO course_topics (name) VALUES ('Mathematics');
 INSERT INTO course_topics (name) VALUES ('Science');
 INSERT INTO course_topics (name) VALUES ('Literature');
@@ -10,12 +12,10 @@ INSERT INTO roles (name) VALUES ('TEACHER');
 INSERT INTO roles (name) VALUES ('UNAPPROVED_TEACHER');
 
 -- Insert into users (including two teachers and two students)
-INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'john.doe@example.com', 'John', 'Doe', '$2a$10$8TLAr1IZXyn651U8DcCSw.mEYJhg.AVov8VeqqwI5UzI1vrs/a78a', NOW());
-INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'jane.doe@example.com', 'Jane', 'Doe', '$2a$10$8TLAr1IZXyn651U8DcCSw.mEYJhg.AVov8VeqqwI5UzI1vrs/a78a', NOW());
-INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'alice.student@example.com', 'Alice', 'Student','$2a$10$8TLAr1IZXyn651U8DcCSw.mEYJhg.AVov8VeqqwI5UzI1vrs/a78a
-', NOW());
-INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'bob.student@example.com', 'Bob', 'Student', '$2a$10$8TLAr1IZXyn651U8DcCSw.mEYJhg.AVov8VeqqwI5UzI1vrs/a78a
-', NOW());
+INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'john.doe@example.com', 'John', 'Doe','$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
+INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'jane.doe@example.com', 'Jane', 'Doe', '$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
+INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'alice.student@example.com', 'Alice', 'Student','$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
+INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'bob.student@example.com', 'Bob', 'Student', '$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
 
 -- Assign roles to users
 INSERT INTO roles_users (user_id, role_id) VALUES (1, 3); -- John as a teacher

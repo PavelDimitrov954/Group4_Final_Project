@@ -7,7 +7,10 @@ import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.LectureDto;
 import com.example.group4_final_project.models.DTOs.ResponseUser;
 import com.example.group4_final_project.models.DTOs.WikiPageDto;
+import com.example.group4_final_project.models.enums.RoleName;
+import com.example.group4_final_project.models.models.Role;
 import com.example.group4_final_project.models.models.User;
+import com.example.group4_final_project.repositories.RoleRepository;
 import com.example.group4_final_project.services.contracts.CourseService;
 import com.example.group4_final_project.services.contracts.LectureService;
 import com.example.group4_final_project.services.contracts.SubmissionService;
@@ -33,16 +36,18 @@ public class CourseMvcController {
     private final CourseService courseService;
     private final LectureService lectureService;
     private final SubmissionService submissionService;
+   private final RoleRepository roleRepository;
 
     private final WikiService wikiService;
 
     public CourseMvcController(UserMapper userMapper, AuthenticationHelper authenticationHelper,
-                               CourseService courseService, LectureService lectureService, SubmissionService submissionService, WikiService wikiService) {
+                               CourseService courseService, LectureService lectureService, SubmissionService submissionService, RoleRepository roleRepository, WikiService wikiService) {
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.submissionService = submissionService;
+        this.roleRepository = roleRepository;
         this.wikiService = wikiService;
     }
 
@@ -60,6 +65,22 @@ public class CourseMvcController {
             return new ResponseUser();
         }
     }
+    @ModelAttribute("student")
+    public Role RoleStudent() {
+        return roleRepository.findByRoleName(RoleName.STUDENT);
+
+    }
+    @ModelAttribute("teacher")
+    public Role RoleTeacher() {
+        return roleRepository.findByRoleName(RoleName.TEACHER);
+
+    }
+    @ModelAttribute("admin")
+    public Role RoleAdmin() {
+        return roleRepository.findByRoleName(RoleName.STUDENT);
+
+    }
+
 
     @GetMapping("/courses")
     public String showCoursePage(Model model) {

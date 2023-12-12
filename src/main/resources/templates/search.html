@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:replace="~{index.html :: head('Users')}"></form>
+<body>
+<form th:replace="~{index.html::header}"></form>
+
+
+
+<section>
+
+</section>
+<div class="masthead">
+    <form action="#" method="get" th:action="@{/users/view}" th:object="${filterOptions}">
+        <label th:text="${'Filter Options'}">Filter Users</label>
+        <br/><br/>
+
+        <div class="form-row">
+            <input  class="form-control mb-2" placeholder="First name" th:field="*{firstName}" type="text"/>
+
+
+            <input class="form-control mb-2" placeholder="Last Name" th:field="*{lastName}" type="text"/>
+
+            <input class="form-control mb-2" placeholder="email" th:field="*{email}" type="text"/>
+
+
+        </div>
+
+        <input type="submit"  class="btn btn-primary mb-2" value="Search"/>
+    </form>
+
+
+    <div th:unless="${users.isEmpty()}">
+        <h2 th:text="${'All Users'}">All Users</h2>
+
+        <div class="form-row">
+            <div class="header">
+                <div class="cell" th:text="${'First name'}">First name</div>
+                <div class="cell" th:text="${'Last Name'}">Last name</div>
+                <div class="cell" th:text="${'Email'}">Email</div>
+            </div>
+            <div class="row" th:each="user : ${users}">
+                <div class="cell">
+                    <a href="#" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName}">First name</a>
+                </div>
+                <div class="cell">
+                    <p  href="#" th:href="@{/admin/{id}(id=${user.id})}" th:text="${user.lastName}">Last name</p>
+                </div>
+                <div class="cell">
+                    <p  href="#" th:href="@{/admin/{id}(id=${user.id})}" th:text="${user.email}">Email</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

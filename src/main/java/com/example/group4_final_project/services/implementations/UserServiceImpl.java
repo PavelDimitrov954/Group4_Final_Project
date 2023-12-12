@@ -3,6 +3,7 @@ package com.example.group4_final_project.services.implementations;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
+import com.example.group4_final_project.exceptions.UnauthorizedOperationException;
 import com.example.group4_final_project.helpers.CourseMapper;
 import com.example.group4_final_project.helpers.ImageHelper;
 import com.example.group4_final_project.helpers.UserMapper;
@@ -12,9 +13,6 @@ import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.*;
 import com.example.group4_final_project.repositories.*;
 import com.example.group4_final_project.services.contracts.UserService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,8 +65,15 @@ public class UserServiceImpl implements UserService {
         return userMapper.fromUser(user);
     }
 
+
     @Override
-    public Page<ResponseUser> get(FilterOptionsUser filterOptionsUser, Pageable pageable) {
+    public List<ResponseUser> get(FilterOptionsUser filterOptionsUser, User loginUser) {
+        if (!loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN)) &&
+        !loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
+
+            throw new UnauthorizedOperationException("Only teacher and  admin can by search users");
+        }
+
         String firstName = filterOptionsUser.getFirstName().isPresent()
                 ? filterOptionsUser.getFirstName().get() : null;
 
@@ -80,9 +85,9 @@ public class UserServiceImpl implements UserService {
 
         List<ResponseUser> responseUsers = userRepository.findUsersByParameters(firstName,
                 lastName, email).stream().map(userMapper::fromUser).collect(Collectors.toList());
-        Page page = new PageImpl(responseUsers);
 
-        return page;
+
+        return responseUsers;
     }
 
 

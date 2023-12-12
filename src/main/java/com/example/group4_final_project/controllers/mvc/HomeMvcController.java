@@ -4,6 +4,8 @@ import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.ResponseUser;
+import com.example.group4_final_project.models.enums.RoleName;
+import com.example.group4_final_project.models.models.Role;
 import com.example.group4_final_project.repositories.RoleRepository;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.services.contracts.CourseService;
@@ -51,6 +53,21 @@ public class HomeMvcController {
             return new ResponseUser();
         }
 
+
+    }
+    @ModelAttribute("student")
+    public Role RoleStudent() {
+        return roleRepository.findByRoleName(RoleName.STUDENT);
+
+    }
+    @ModelAttribute("teacher")
+    public Role RoleTeacher() {
+        return roleRepository.findByRoleName(RoleName.TEACHER);
+
+    }
+    @ModelAttribute("admin")
+    public Role RoleAdmin() {
+        return roleRepository.findByRoleName(RoleName.STUDENT);
 
     }
 

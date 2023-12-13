@@ -16,5 +16,6 @@ public interface CourseRepository extends JpaRepository<Course, Integer>, JpaSpe
     Optional<Course> findAllByTeacher(User user);
 
 
+
     List<Course> findTopCoursesByRating(int limit);
 }

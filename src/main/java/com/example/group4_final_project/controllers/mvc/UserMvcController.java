@@ -6,10 +6,7 @@ import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.exceptions.UnauthorizedOperationException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
-import com.example.group4_final_project.models.DTOs.FilterDtoUser;
-import com.example.group4_final_project.models.DTOs.GradeDto;
-import com.example.group4_final_project.models.DTOs.ResponseUser;
-import com.example.group4_final_project.models.DTOs.UserUpdateDto;
+import com.example.group4_final_project.models.DTOs.*;
 import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.Role;
@@ -220,6 +217,26 @@ public class UserMvcController {
             return "search";
 
 
+
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+
+    }
+
+    @GetMapping("/submission")
+    public String studentSubmission(Model model,
+                              HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            List<SubmissionDto>  submissionDtoList = userService.getStudentSubmission(user);
+            model.addAttribute("submission",submissionDtoList );
+
+            return "submission";
 
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";

@@ -4,6 +4,7 @@ import com.example.group4_final_project.models.DTOs.CourseDto;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.models.Course;
+import com.example.group4_final_project.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,28 +17,24 @@ import java.util.List;
 public class CourseMapper {
     private final UserMapper userMapper;
     private final EnrollmentMapper enrollmentMapper;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public CourseMapper(UserMapper userMapper, EnrollmentMapper enrollmentMapper) {
+    public CourseMapper(UserMapper userMapper, EnrollmentMapper enrollmentMapper, CourseRepository courseRestController) {
         this.userMapper = userMapper;
         this.enrollmentMapper = enrollmentMapper;
+
+        this.courseRepository = courseRestController;
     }
 
     public CourseDto toDto(Course course) {
-        CourseDto dto = new CourseDto();
-        dto.setDescription(course.getDescription());
-        dto.setTopic(course.getTopic().getName());
-        dto.setTitle(course.getTitle());
-        dto.setRating(course.getRating());
-        if (course.getEnrollments() != null) {
-            dto.setEnrollments(enrollmentMapper.toDto(course.getEnrollments()));
-        }
-        dto.setTeacher(userMapper.fromUser(course.getTeacher()));
-        dto.setStartDate(course.getStartDate());
-        dto.setCreatedAt(course.getCreatedAt());
-        dto.setCourseId(course.getId());
-        dto.setUpdatedAt(course.getUpdatedAt());
-        return dto;
+        CourseDto courseDto = new CourseDto();
+        courseDto.setCourseId(course.getId());
+        courseDto.setDescription(course.getDescription());
+        courseDto.setTitle(course.getTitle());
+        courseDto.setTeacher(course.getTeacher());
+          return courseDto;
+
     }
 
     public CreateCourseDto toCreateDto(Course course) {
@@ -67,6 +64,7 @@ public class CourseMapper {
     }
 
     public Course toEntity(CreateCourseDto dto) {
+       // null
         Course course = new Course();
         course.setDescription(dto.getDescription());
         // course.setTopic(dto.getTopic());
@@ -90,5 +88,10 @@ public class CourseMapper {
     public List<Course> toEntity(List<CreateCourseDto> dtos) {
         return new ArrayList<>(dtos.stream().map(this::toEntity)
                 .toList());
+    }
+
+    public Course fromDto(CourseDto coursedto) {
+       return courseRepository.findById(coursedto.getCourseId()).get();
+
     }
 }

@@ -1,9 +1,6 @@
 package com.example.group4_final_project.services.contracts;
 
-import com.example.group4_final_project.models.DTOs.GradeDto;
-import com.example.group4_final_project.models.DTOs.ResponseUser;
-import com.example.group4_final_project.models.DTOs.UserRegisterDto;
-import com.example.group4_final_project.models.DTOs.UserUpdateDto;
+import com.example.group4_final_project.models.DTOs.*;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.User;
 import org.apache.tomcat.websocket.AuthenticationException;
@@ -37,4 +34,6 @@ public interface UserService {
     public List<GradeDto> getGrades(int id, User loginUser);
 
     void makeUserAdmin(User admin, int id);
+
+    List<SubmissionDto> getStudentSubmission(User user);
 }

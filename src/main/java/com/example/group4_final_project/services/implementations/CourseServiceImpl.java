@@ -3,6 +3,7 @@ package com.example.group4_final_project.services.implementations;
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.CourseMapper;
+
 import com.example.group4_final_project.models.DTOs.CourseDto;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
@@ -13,10 +14,7 @@ import com.example.group4_final_project.models.models.Course;
 import com.example.group4_final_project.models.models.CourseTopic;
 import com.example.group4_final_project.models.models.Enrollment;
 import com.example.group4_final_project.models.models.User;
-import com.example.group4_final_project.repositories.CourseRepository;
-import com.example.group4_final_project.repositories.CourseTopicRepository;
-import com.example.group4_final_project.repositories.EnrollmentRepository;
-import com.example.group4_final_project.repositories.RoleRepository;
+import com.example.group4_final_project.repositories.*;
 import com.example.group4_final_project.services.contracts.CourseService;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,17 +42,19 @@ public class CourseServiceImpl implements CourseService {
 
     private final RoleRepository roleRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final LectureRepository lectureRepository;
 
     @Autowired
     public CourseServiceImpl(CourseRepository courseRepository,
                              CourseMapper courseMapper,
                              CourseTopicRepository courseTopicRepository,
-                             RoleRepository roleRepository, EnrollmentRepository enrollmentRepository) {
+                             RoleRepository roleRepository, EnrollmentRepository enrollmentRepository, LectureRepository lectureRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseTopicRepository = courseTopicRepository;
         this.roleRepository = roleRepository;
         this.enrollmentRepository = enrollmentRepository;
+        this.lectureRepository = lectureRepository;
     }
 
     @Override
@@ -92,16 +92,21 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CreateCourseDto> getAllCoursesBYUser(User user) {
-
-        if (user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
-            return courseRepository
-                    .findAllByTeacher(user).stream().map(courseMapper::toCreateDto).toList();
+    public List<CourseDto> getAllCoursesBYUser(User user) {
+        List<CourseDto> courseDto = new ArrayList<>();
+        if (user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER)) ||
+                user.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN))) {
+            courseDto =   courseRepository
+                    .findAllByTeacher(user).stream().map(courseMapper::toDto).toList();
         } else if (user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))) {
             Optional<Enrollment> enrollments = enrollmentRepository.findEnrollmentByStudent(user);
-            return enrollments.stream().map(e -> courseMapper.toCreateDto(e.getCourse())).toList();
+            courseDto =  enrollments.stream().map(e -> courseMapper.toDto(e.getCourse())).toList();
         }
-        return new ArrayList<>();
+
+        courseDto.stream().forEach(course ->{
+            course.setLectures(lectureRepository.findByCourseId(course.getCourseId()).get());
+        });
+        return courseDto;
     }
 
 

@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -20,7 +21,7 @@ public class Lecture {
     @Setter(AccessLevel.NONE)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
@@ -44,4 +45,15 @@ public class Lecture {
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Lecture lecture)) return false;
+        return id.equals(lecture.id) && course.equals(lecture.course) && title.equals(lecture.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, course, title);
+    }
 }

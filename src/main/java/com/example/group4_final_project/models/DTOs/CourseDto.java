@@ -1,42 +1,23 @@
 package com.example.group4_final_project.models.DTOs;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
+import com.example.group4_final_project.models.models.Lecture;
+import com.example.group4_final_project.models.models.User;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Set;
+import java.util.List;
+
 
 @Data
 public class CourseDto {
 
 
     private int courseId;
-    @NotNull
-    @Length(min = 5, max = 50)
     private String title;
-
-    @NotNull
-    private String topic;
-
-    @Length(max = 1000)
     private String description;
+    private User teacher;
+    private List<Lecture> lectures;
 
-    @DateTimeFormat
-    private Date startDate;
 
-    private ResponseUser teacher;
 
-    @Nullable
-    private Integer rating;
 
-    private Timestamp createdAt;
-
-    private Timestamp updatedAt;
-
-    @Nullable
-    private Set<EnrollmentDto> enrollments;
 }

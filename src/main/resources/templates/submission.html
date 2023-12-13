@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:replace="~{index.html :: head('Profile')}"></form>
+<body>
+<form th:replace="~{index.html::header}"></form>
+
+
+<section>
+
+</section>
+
+
+
+<h1>Student Submissions</h1>
+
+<!-- Итерация през всички SubmissionDto обекти в списъка -->
+<div th:each="submissionDto : ${submission}">
+    <h2 th:text="${submissionDto.lecture.title}"></h2>
+
+    <!-- Итерация през всички Submission обекти в списъка -->
+    <table>
+        <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Submission URL</th>
+            <th>Grade</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="submission : ${submissionDto.submission}">
+            <td th:text="${submission.user.firstName}"></td>
+            <td th:text="${submission.getSubmissionURL()}"></td>
+            <td th:text="${submission.grade}"></td>
+            <td>
+                <!-- Форма за въвеждане на оценка -->
+                <!--<form action="/submitGrade" method="post">
+                    <input type="hidden" name="submissionId" th:value="${submission.id}" />
+                    <input type="text" name="grade" />
+                    <button type="submit">Submit Grade</button>
+                </form>-->
+
+                <!-- Линк за изтегляне на решението -->
+                <a th:href="${submission.submissionURL}" class="btn btn-primary" download>Изтегли файл</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -12,6 +12,8 @@ import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.*;
 import com.example.group4_final_project.repositories.*;
+import com.example.group4_final_project.services.contracts.CourseService;
+import com.example.group4_final_project.services.contracts.LectureService;
 import com.example.group4_final_project.services.contracts.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,13 +40,16 @@ public class UserServiceImpl implements UserService {
     private final EnrollmentRepository enrollmentRepository;
     private final SubmissionRepository submissionRepository;
     private final CourseMapper courseMapper;
+
+    private final CourseService courseService;
     private final ImageHelper imageHelper;
     private final LectureRepository lectureRepository;
+    private final LectureService lectureService;
 
 
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository, UserMapper userMapper,
-                           PasswordEncoder passwordEncoder, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, SubmissionRepository submissionRepository, CourseMapper courseMapper, ImageHelper imageHelper, LectureRepository lectureRepository) {
+                           PasswordEncoder passwordEncoder, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, SubmissionRepository submissionRepository, CourseMapper courseMapper, CourseService courseService, ImageHelper imageHelper, LectureRepository lectureRepository, LectureService lectureService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
@@ -53,8 +58,10 @@ public class UserServiceImpl implements UserService {
         this.enrollmentRepository = enrollmentRepository;
         this.submissionRepository = submissionRepository;
         this.courseMapper = courseMapper;
+        this.courseService = courseService;
         this.imageHelper = imageHelper;
         this.lectureRepository = lectureRepository;
+        this.lectureService = lectureService;
     }
 
 
@@ -226,41 +233,35 @@ public class UserServiceImpl implements UserService {
         if (!user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT))) {
             throw new AuthorizationException(INVALID_AUTHORIZATION);
         }
-        List<GradeDto> gradeDto = new ArrayList<>();
+        List<GradeDto> gradesDtoList = new ArrayList<>();
+        List<CourseDto> courses = courseService.getAllCoursesBYUser(user);
 
 
-        List<Submission> submissionList = submissionRepository.findAllByUser(user).stream().toList();
-
-        Optional<Course> courses = courseRepository.findAllByTeacher(user);
         if(courses.isEmpty()){
-            return gradeDto;
+            return gradesDtoList;
         }
 
-        courses.stream().forEach(course -> {
-          GradeDto gradeDto1 = new GradeDto();
-          gradeDto1.setCourseTitle(course.getTitle());
-          Map<Lecture,Double> grades = new LinkedHashMap<>();
-            List<Lecture> lectures = lectureRepository.findAllByCourse(course).stream().toList();
-            lectures.stream().forEach(lecture->{
-                Assignment assignment = lecture.getAssignment();
-                Submission submission = submissionRepository.findByAssignmentAndAndUser(assignment,user);
-                Double grade = submission.getGrade();
-                grades.put(lecture,grade);
-
+        for (CourseDto course: courses) {
+            GradeDto gradeDto = new GradeDto();
+            gradeDto.setCourseTitle(course.getTitle());
+            Map<Lecture, Double> grades = new LinkedHashMap<>();
+            course.getLectures().stream().forEach(lecture -> {
+                Submission submission =
+                        submissionRepository.findByAssignmentAndAndUser(lecture.getAssignment(),user);
+                grades.putIfAbsent(lecture,submission.getGrade());
+                gradeDto.setGrades(grades);
             });
-            gradeDto1.setGrades(grades);
-            gradeDto1.setAbvGrade(grades.values().stream()
-                    .mapToDouble(Double::doubleValue)
-                    .average()
-                    .orElse(Double.NaN));
+
+            double average = grades.values().stream()
+                    .collect(Collectors.averagingDouble(Double::doubleValue));
+            gradeDto.setAbvGrade(average);
+
+            gradesDtoList.add(gradeDto);
+        }
 
 
 
-        });
-
-
-
-        return gradeDto;
+        return gradesDtoList;
 
 
     }
@@ -284,6 +285,34 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(userToPromote);
 
+    }
+
+    @Override
+    public List<SubmissionDto> getStudentSubmission(User loginUser) {
+        if (!loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN)) &&
+                !loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
+
+            throw new UnauthorizedOperationException("Only teacher and  admin can by search users");
+        }
+
+        List<Course> courses = courseRepository.findAllByTeacher(loginUser).stream().toList();
+        List<Lecture> lectureLIst = new ArrayList<>();
+        courses.stream().forEach(course-> {
+            lectureLIst.addAll(lectureRepository.findAllByCourse(course).stream().toList());
+        });
+        List<SubmissionDto> submissionDtoList = new ArrayList<>();
+
+        lectureLIst.stream().forEach(lecture -> {
+
+            SubmissionDto submissionDto = new SubmissionDto();
+            submissionDto.setLecture(lecture);
+            submissionDto.setSubmission(submissionRepository.findByAssignment(lecture.getAssignment())
+                    .stream()
+                    .filter(submission-> submission.getGrade()!= null).collect(Collectors.toList()));
+            submissionDtoList.add(submissionDto);
+        });
+
+        return submissionDtoList;
     }
 
 

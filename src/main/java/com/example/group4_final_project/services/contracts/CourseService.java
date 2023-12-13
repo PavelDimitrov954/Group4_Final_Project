@@ -1,5 +1,6 @@
 package com.example.group4_final_project.services.contracts;
 
+import com.example.group4_final_project.models.DTOs.CourseDto;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.models.DTOs.CreateCourseDto;
 import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface CourseService {
     List<CourseDtoView> getAllCourses(FilterOptionsCourse filterOptionsCourse);
-    List<CreateCourseDto> getAllCoursesBYUser(User user);
+    List<CourseDto> getAllCoursesBYUser(User user);
 
     CourseDtoView getById(int id);
 

@@ -10,12 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableJpaRepositories("com.example.group4_final_project.repositories")
 public class Group4FinalProjectApplication {
     public static void main(String[] args) {
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String pass = "Pass12345@";
-        String encoderPass = encoder.encode(pass);
-        System.out.println(encoderPass + "    HELLO");
-
         SpringApplication.run(Group4FinalProjectApplication.class, args);
     }
 

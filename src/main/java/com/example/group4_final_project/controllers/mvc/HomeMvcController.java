@@ -1,4 +1,5 @@
 package com.example.group4_final_project.controllers.mvc;
+
 import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
@@ -9,6 +10,7 @@ import com.example.group4_final_project.models.models.Role;
 import com.example.group4_final_project.repositories.RoleRepository;
 import com.example.group4_final_project.models.DTOs.CourseDtoView;
 import com.example.group4_final_project.services.contracts.CourseService;
+import com.example.group4_final_project.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,18 +30,16 @@ public class HomeMvcController {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final CourseService courseService;
+    private final UserService userService;
 
     @Autowired
-    public HomeMvcController(AuthenticationHelper authenticationHelper, RoleRepository roleRepository, UserMapper userMapper, CourseService courseService) {
+    public HomeMvcController(AuthenticationHelper authenticationHelper, RoleRepository roleRepository, UserMapper userMapper, CourseService courseService, UserService userService) {
         this.authenticationHelper = authenticationHelper;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.courseService = courseService;
+        this.userService = userService;
     }
-
-
-
-
 
 
     @ModelAttribute("isAuthenticated")
@@ -51,35 +51,42 @@ public class HomeMvcController {
     public ResponseUser responseUser(HttpSession session) {
         try {
             return userMapper.fromUser(authenticationHelper.tryGetCurrentUser(session));
-        }catch (EntityNotFoundException | AuthorizationException e){
+        } catch (EntityNotFoundException | AuthorizationException e) {
             return new ResponseUser();
         }
 
 
     }
+
     @ModelAttribute("student")
     public Role RoleStudent() {
         return roleRepository.findByRoleName(RoleName.STUDENT);
 
     }
+
     @ModelAttribute("teacher")
     public Role RoleTeacher() {
         return roleRepository.findByRoleName(RoleName.TEACHER);
 
     }
+
     @ModelAttribute("admin")
     public Role RoleAdmin() {
         return roleRepository.findByRoleName(RoleName.ADMIN);
 
     }
 
-
-
     @GetMapping
     public String showHomePage(Model model) {
         List<CourseDtoView> courses = courseService.getAllCourses(); // Fetch courses from the service
-        model.addAttribute("courses", courses);
+        int studentCount = userService.countByRole(RoleName.STUDENT); // Assume this method exists
+        int teacherCount = userService.countByRole(RoleName.TEACHER); // Assume this method exists
+        int courseCount = courses.size(); // You can also have a dedicated method for counting courses
 
+        model.addAttribute("courses", courses);
+        model.addAttribute("studentCount", studentCount);
+        model.addAttribute("teacherCount", teacherCount);
+        model.addAttribute("courseCount", courseCount);
         return "index";
     }
 
@@ -87,7 +94,6 @@ public class HomeMvcController {
     public String showAboutPage() {
         return "about";
     }
-
 
 
     @GetMapping("/contact")

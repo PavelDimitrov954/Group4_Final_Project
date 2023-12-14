@@ -80,7 +80,6 @@ public class UserMvcController {
 
     }
 
-
     @GetMapping()
     public String showProfile(HttpSession session, Model model) {
         User user = authenticationHelper.tryGetCurrentUser(session);

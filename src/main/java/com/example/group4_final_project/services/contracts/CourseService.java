@@ -22,6 +22,7 @@ public interface CourseService {
     void delete(User userWhoDeletes, int id);
 
     List<CourseTopicDto> getAllCourseTopics();
+    Integer getCourseCount();
 
     List<CourseDtoView> getTopCoursesByRating(int limit);
 }

@@ -1,6 +1,7 @@
 package com.example.group4_final_project.services.contracts;
 
 import com.example.group4_final_project.models.DTOs.*;
+import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.filtering.FilterOptionsUser;
 import com.example.group4_final_project.models.models.User;
 import org.apache.tomcat.websocket.AuthenticationException;
@@ -35,7 +36,7 @@ public interface UserService {
 
     void makeUserAdmin(User admin, int id);
 
-
+    Integer countByRole(RoleName roleName);
     boolean isTeacher(User user);
     boolean isStudent(User user);
 

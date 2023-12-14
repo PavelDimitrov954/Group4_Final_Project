@@ -20,13 +20,45 @@
 
     <!-- Search and Filter Section -->
     <section id="search-filter">
-        <form th:action="@{/search}" method="get">
-            <input type="text" id="searchQuery" name="searchQuery" placeholder="Search courses...">
-            <!-- Additional filters can be added here (drop-downs, checkboxes, etc.) -->
+        <form th:action="@{/courses}" method="get">
+
+            <!-- Search by Course Title -->
+            <label for="searchQuery">Search by Course Title:</label>
+            <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter course title...">
+
+            <!-- Filter by Course Topic (Dropdown) -->
+            <label for="courseTopic">Filter by Course Topic:</label>
+            <select id="courseTopic" name="courseTopic">
+                <option value="">All Topics</option>
+                <!-- Add options dynamically based on available topics in the backend -->
+                <option th:each="topic : ${courseTopics}" th:value="${topic.getTopicName()}" th:text="${topic.getTopicName()}">Topic</option>
+            </select>
+
+            <!-- Filter by Teacher (Dropdown) -->
+            <label for="teacher">Filter by Teacher:</label>
+            <select id="teacher" name="teacher">
+                <option value="">All Teachers</option>
+                <!-- Add options dynamically based on available teachers in the backend -->
+                <option th:each="teacher : ${teachers}" th:value="${teacher}" th:text="${teacher.getFullName()}">Teacher</option>
+            </select>
+
+            <!-- Filter by Rating (Dropdown or Input) -->
+            <label for="rating">Filter by Rating:</label>
+            <select id="rating" name="rating">
+                <option value="">All Ratings</option>
+                <!-- Add options dynamically based on available ratings in the backend -->
+                <option th:each="rating : ${ratings}" th:value="${rating}" th:text="${rating}">Rating</option>
+            </select>
+
+            <!-- Additional filters can be added here (e.g., checkboxes for other options) -->
+
             <button type="submit">Search</button>
         </form>
     </section>
-
+    <!-- courses.html -->
+    <div th:if="${isTeacher==true}">
+        <a th:href="@{/courses/create}" class="btn btn-primary">Create Course</a>
+    </div>
     <!-- Courses List Section -->
     <section id="courses" class="courses">
 
@@ -55,11 +87,9 @@
                                     </div>
 
                                 </div>
-                                <a th:if="${isAuthenticated}" th:href="@{/courses/{courseId}/details(courseId=${course.getCourseId()})}">View Details</a>
+                                <a  th:href="@{/courses/{courseId}/details(courseId=${course.getCourseId()})}">View Details</a>
                                 <!-- <i class="bx bx-user" th:text="${'Enrollments: ' + course.getEnrollments().size()}"> -->
-                                <p th:text="${'Enrollments: ' + course.getEnrollments().size()}">Course
-                                    enrollments
-                                </p> <i class="bx bx-user"
+                                 <i class="bx bx-user"
                                         th:text="${'Enrollments: ' + course.getEnrollments().size()}">
                                 &nbsp;&nbsp;</i>
 
@@ -82,14 +112,14 @@
         class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
-<script th:src="@{assets/vendor/purecounter/purecounter_vanilla.js}"></script>
-<script th:src="@{assets/vendor/aos/aos.js}"></script>
-<script th:src="@{assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{assets/vendor/swiper/swiper-bundle.min.js}"></script>
-<script th:src="@{assets/vendor/php-email-form/validate.js}"></script>
+<script th:src="@{/assets/vendor/purecounter/purecounter_vanilla.js}"></script>
+<script th:src="@{/assets/vendor/aos/aos.js}"></script>
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/swiper/swiper-bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
 
 <!-- Template Main JS File -->
-<script th:src="@{assets/js/main.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
 
 </body>
 

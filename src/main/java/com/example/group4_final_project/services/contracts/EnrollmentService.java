@@ -18,6 +18,6 @@ public interface EnrollmentService {
     Enrollment enrollStudentInCourse(int studentId, int courseId);
 
     void removeStudentFromCourse(int studentId, int courseId);
-
+    boolean isStudentEnrolled(int studentId, int courseId);
 
 }

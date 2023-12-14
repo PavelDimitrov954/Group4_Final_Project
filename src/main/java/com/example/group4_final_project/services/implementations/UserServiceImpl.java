@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ResponseUser> get(FilterOptionsUser filterOptionsUser, User loginUser) {
         if (!loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.ADMIN)) &&
-        !loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
+                !loginUser.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER))) {
 
             throw new UnauthorizedOperationException("Only teacher and  admin can by search users");
         }
@@ -129,11 +129,11 @@ public class UserServiceImpl implements UserService {
         boolean isDuplicate = true;
         User updateUser = userMapper.fromDto(id, userUpdateDto);
 
-        if(userUpdateDto.getPassword()!=null){
+        if (userUpdateDto.getPassword() != null) {
             updateUser.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
         }
 
-        if(!userUpdateDto.getImage().isEmpty()){
+        if (!userUpdateDto.getImage().isEmpty()) {
             System.out.println("2");
             user.setImageURL(imageHelper.uploadImage(userUpdateDto.getImage()));
         }
@@ -237,18 +237,18 @@ public class UserServiceImpl implements UserService {
         List<CourseDto> courses = courseService.getAllCoursesBYUser(user);
 
 
-        if(courses.isEmpty()){
+        if (courses.isEmpty()) {
             return gradesDtoList;
         }
 
-        for (CourseDto course: courses) {
+        for (CourseDto course : courses) {
             GradeDto gradeDto = new GradeDto();
             gradeDto.setCourseTitle(course.getTitle());
             Map<Lecture, Double> grades = new LinkedHashMap<>();
             course.getLectures().stream().forEach(lecture -> {
                 Submission submission =
-                        submissionRepository.findByAssignmentAndAndUser(lecture.getAssignment(),user);
-                grades.putIfAbsent(lecture,submission.getGrade());
+                        submissionRepository.findByAssignmentAndAndUser(lecture.getAssignment(), user);
+                grades.putIfAbsent(lecture, submission.getGrade());
                 gradeDto.setGrades(grades);
             });
 
@@ -258,7 +258,6 @@ public class UserServiceImpl implements UserService {
 
             gradesDtoList.add(gradeDto);
         }
-
 
 
         return gradesDtoList;
@@ -273,7 +272,7 @@ public class UserServiceImpl implements UserService {
             throw new AuthorizationException("You don't have permission to make users admin.");
         }
 
-        User userToPromote = userRepository.findById(id).orElseThrow(()->new EntityNotFoundException("User",id));
+        User userToPromote = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
 
         if (userToPromote.getRoles().contains(adminRole)) {
             throw new EntityDuplicateException("User is already an admin: " + userToPromote.getEmail());
@@ -297,7 +296,7 @@ public class UserServiceImpl implements UserService {
 
         List<Course> courses = courseRepository.findAllByTeacher(loginUser).stream().toList();
         List<Lecture> lectureLIst = new ArrayList<>();
-        courses.stream().forEach(course-> {
+        courses.stream().forEach(course -> {
             lectureLIst.addAll(lectureRepository.findAllByCourse(course).stream().toList());
         });
         List<SubmissionDto> submissionDtoList = new ArrayList<>();
@@ -308,12 +307,19 @@ public class UserServiceImpl implements UserService {
             submissionDto.setLecture(lecture);
             submissionDto.setSubmission(submissionRepository.findByAssignment(lecture.getAssignment())
                     .stream()
-                    .filter(submission-> submission.getGrade()!= null).collect(Collectors.toList()));
+                    .filter(submission -> submission.getGrade() != null).collect(Collectors.toList()));
             submissionDtoList.add(submissionDto);
         });
 
         return submissionDtoList;
     }
 
-
+    @Override
+    public boolean isTeacher(User user) {
+        return user.getRoles().contains(roleRepository.findByRoleName(RoleName.TEACHER));
+    }
+    @Override
+    public boolean isStudent(User user) {
+        return user.getRoles().contains(roleRepository.findByRoleName(RoleName.STUDENT));
+    }
 }

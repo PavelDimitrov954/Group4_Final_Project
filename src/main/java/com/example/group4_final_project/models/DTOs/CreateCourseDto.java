@@ -3,6 +3,12 @@ package com.example.group4_final_project.models.DTOs;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 @Data
 public class CreateCourseDto {
@@ -15,5 +21,8 @@ public class CreateCourseDto {
 
     @Length(max = 1000)
     private String description;
+    @DateTimeFormat
+    private String startDate;
+
 
 }

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
@@ -31,6 +32,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         this.courseRepository = courseRepository;
     }
 
+    public boolean isStudentEnrolled(int studentId, int courseId){
+       return findByStudentIdAndCourseId(studentId, courseId).isPresent();
+    }
+    public Optional<Enrollment> findByStudentIdAndCourseId(int studentId, int courseId){
+        return enrollmentRepository.findByStudentIdAndCourseId(studentId, courseId);
+    }
     @Override
     @Transactional
     public Enrollment createEnrollment(Enrollment enrollment) {

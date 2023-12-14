@@ -4,10 +4,8 @@ import com.example.group4_final_project.exceptions.AuthorizationException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
 import com.example.group4_final_project.helpers.CourseMapper;
 
-import com.example.group4_final_project.models.DTOs.CourseDto;
-import com.example.group4_final_project.models.DTOs.CourseDtoView;
-import com.example.group4_final_project.models.DTOs.CreateCourseDto;
-import com.example.group4_final_project.models.DTOs.UpdateCourseDto;
+import com.example.group4_final_project.helpers.CourseTopicMapper;
+import com.example.group4_final_project.models.DTOs.*;
 import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.filtering.FilterOptionsCourse;
 import com.example.group4_final_project.models.models.Course;
@@ -23,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class CourseServiceImpl implements CourseService {
     private static final String UNAUTHORIZED_USER_EXCEPTION = "You are unauthorized to do this action";
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
-
+    private final CourseTopicMapper courseTopicMapper;
     private final CourseTopicRepository courseTopicRepository;
 
     private final RoleRepository roleRepository;
@@ -47,10 +47,11 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     public CourseServiceImpl(CourseRepository courseRepository,
                              CourseMapper courseMapper,
-                             CourseTopicRepository courseTopicRepository,
+                             CourseTopicMapper courseTopicMapper, CourseTopicRepository courseTopicRepository,
                              RoleRepository roleRepository, EnrollmentRepository enrollmentRepository, LectureRepository lectureRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
+        this.courseTopicMapper = courseTopicMapper;
         this.courseTopicRepository = courseTopicRepository;
         this.roleRepository = roleRepository;
         this.enrollmentRepository = enrollmentRepository;
@@ -73,11 +74,11 @@ public class CourseServiceImpl implements CourseService {
         return courseMapper.toDtoViews(courseRepository.findAll((Specification<Course>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            filterOptionsCourse.getCourseTitle().ifPresent(title ->
-                    predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%")));
+            filterOptionsCourse.getCourseTitle().ifPresent(courseTitle ->
+                    predicates.add(criteriaBuilder.like(root.get("courseTitle"), "%" + courseTitle + "%")));
 
-            filterOptionsCourse.getCourseTopic().ifPresent(topic ->
-                    predicates.add(criteriaBuilder.equal(root.get("topic"), topic)));
+            filterOptionsCourse.getCourseTopic().ifPresent(courseTopic ->
+                    predicates.add(criteriaBuilder.equal(root.get("courseTopic"), courseTopic)));
 
             filterOptionsCourse.getTeacher().ifPresent(teacher ->
                     predicates.add(criteriaBuilder.equal(root.get("teacher"), teacher)));
@@ -120,6 +121,13 @@ public class CourseServiceImpl implements CourseService {
         //TODO Validation for courseTopic
         CourseTopic topic = courseTopicRepository.findByName(courseDto.getTopic()).get();
         course.setTopic(topic);
+        try {
+            Timestamp startDate = new Timestamp(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").parse(courseDto.getStartDate()).getTime());
+            course.setStartDate(startDate);
+        } catch (ParseException e) {
+            System.out.println("****There was a parsing error again!****");
+        }
+
         courseRepository.save(course);
         return courseMapper.toDtoView(course);
     }
@@ -146,7 +154,12 @@ public class CourseServiceImpl implements CourseService {
 
         }
         if (courseDto.getStartDate() != null) {
-            courseToUpdate.setStartDate(courseDto.getStartDate());
+            try {
+                Timestamp startDate = new Timestamp(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").parse(courseDto.getStartDate()).getTime());
+                courseToUpdate.setStartDate(startDate);
+            } catch (ParseException e) {
+                System.out.println("****There was a parsing error again!****");
+            }
         }
         return courseMapper.toDtoView(courseRepository.save(courseToUpdate));
     }
@@ -168,4 +181,9 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseDtoView> getTopCoursesByRating(int limit) {
         return courseMapper.toDtoViews(courseRepository.findTopCoursesByRating(limit));
     };
+
+    @Override
+    public List<CourseTopicDto> getAllCourseTopics(){
+        return courseTopicMapper.toDto(courseTopicRepository.findAll());
+    }
 }

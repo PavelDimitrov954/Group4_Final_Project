@@ -20,6 +20,6 @@ public class UpdateCourseDto {
     private String description;
 
     @DateTimeFormat
-    private Date startDate;
+    private String startDate;
 
 }

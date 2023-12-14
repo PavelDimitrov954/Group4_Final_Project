@@ -1,5 +1,6 @@
 package com.example.group4_final_project.repositories;
 
+import com.example.group4_final_project.models.enums.RoleName;
 import com.example.group4_final_project.models.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 
     User findByEmail(String email);
+
     User findByFirstName(String fistName);
 
 
@@ -28,4 +30,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     );
 
 
+    @Query("SELECT COUNT(u) FROM User u JOIN u.roles r WHERE r.roleName = :roleName")
+    Integer countByRole(@Param("roleName") RoleName roleName);
 }

@@ -15,6 +15,7 @@ import com.example.group4_final_project.repositories.*;
 import com.example.group4_final_project.services.contracts.CourseService;
 import com.example.group4_final_project.services.contracts.LectureService;
 import com.example.group4_final_project.services.contracts.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
     private final LectureService lectureService;
 
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository, UserMapper userMapper,
                            PasswordEncoder passwordEncoder, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, SubmissionRepository submissionRepository, CourseMapper courseMapper, CourseService courseService, ImageHelper imageHelper, LectureRepository lectureRepository, LectureService lectureService) {
@@ -312,6 +314,11 @@ public class UserServiceImpl implements UserService {
         });
 
         return submissionDtoList;
+    }
+
+    @Override
+    public Integer countByRole(RoleName roleName) {
+        return userRepository.countByRole(roleName);
     }
 
     @Override

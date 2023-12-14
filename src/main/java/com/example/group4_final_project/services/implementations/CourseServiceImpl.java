@@ -186,4 +186,8 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseTopicDto> getAllCourseTopics(){
         return courseTopicMapper.toDto(courseTopicRepository.findAll());
     }
+
+    public Integer getCourseCount(){
+        return courseRepository.findAll().size();
+    }
 }

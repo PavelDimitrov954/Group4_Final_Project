@@ -76,10 +76,9 @@ public class UserMvcController {
     }
     @ModelAttribute("admin")
     public Role RoleAdmin() {
-        return roleRepository.findByRoleName(RoleName.STUDENT);
+        return roleRepository.findByRoleName(RoleName.ADMIN);
 
     }
-
 
     @GetMapping()
     public String showProfile(HttpSession session, Model model) {

@@ -16,12 +16,13 @@ INSERT INTO users (create_at, email, first_name, last_name, password, update_at)
 INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'jane.doe@example.com', 'Jane', 'Doe', '$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
 INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'alice.student@example.com', 'Alice', 'Student','$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
 INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'bob.student@example.com', 'Bob', 'Student', '$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
-
+INSERT INTO users (create_at, email, first_name, last_name, password, update_at) VALUES (NOW(), 'admin@company.com', 'Bob', 'Admin', '$2a$10$hHR3DNTCu15fZ8A.7dewPu4/9BBeRsWj/tU4ciQNJLeTinCdnfSwC', NOW());
 -- Assign roles to users
 INSERT INTO roles_users (user_id, role_id) VALUES (1, 3); -- John as a teacher
 INSERT INTO roles_users (user_id, role_id) VALUES (2, 3); -- Jane as a teacher
 INSERT INTO roles_users (user_id, role_id) VALUES (3, 2); -- Alice as a student
 INSERT INTO roles_users (user_id, role_id) VALUES (4, 2); -- Bob as a student
+INSERT INTO roles_users (user_id, role_id) VALUES (5, 1); -- Bob as a student
 
 -- Insert into courses (with teacher_id as 1 and 2)
 INSERT INTO courses (created_at, description, rating, start_date, status, title, updated_at, teacher_id, topic_id) VALUES (NOW(), 'Intro to Algebra', 5, '2021-09-01', 'ACTIVE', 'Algebra 101', NOW(), 1, 1);

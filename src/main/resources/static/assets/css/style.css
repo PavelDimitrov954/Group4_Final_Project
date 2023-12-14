@@ -9,6 +9,70 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+/* grades.html*/
+
+.grade-view {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.grade-view-image {
+    display: flow;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.grades-table {
+    margin-bottom: 20px;
+    margin-left: 100px;
+
+}
+
+table.grades.small {
+    width: 50%;
+    border-collapse: collapse;
+    margin-top: 10px;
+
+}
+
+table.grades.small th, table.grades.small td {
+    border: none;
+    padding: 8px;
+    text-align: left;
+}
+
+table.grades.small th {
+    background-color: #f2f2f2;
+}
+
+.average-grade-container {
+    display: flex;
+    align-items: center;
+}
+
+.average-grade {
+    font-weight: bold;
+    color: #28a745;
+    margin-left: 10px;
+}
+
+
+.user-text {
+    text-decoration: none;
+    color: #5fcf80;
+}
+
+.user-text:hover {
+    text-decoration: underline;
+}
+
+
+hr {
+    border: none;
+    margin-bottom: 20px;
+}
 
 
 
@@ -16,9 +80,129 @@
 
 
 
+/* search.html */
+.user-search-container {
+  margin: 20px;
+}
+
+
+.filter-form, .unapproved-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+
+}
+
+
+.filter-inputs {
+  display: flex;
+  gap: 10px;
+
+}
+
+.filter-input {
+  text-decoration: none;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+
+.submit-button {
+  padding: 8px 30px;
+  background-color: #5fcf80;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+
+
+}
+
+.submit-button:hover {
+  background-color: #5fcf80;
+}
+
+
+.user-table-container {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 20px;
+  overflow-x: auto;
+  margin-right: 200px;
+  margin-left: 200px;
+}
+
+
+.user-table, .unapprovedUser-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+.user-table th, .unapprovedUser-table th {
+  border: 1px solid #ddd;
+  background-color: #5fcf80;
+}
+
+
+.user-table tr, .unapprovedUser-table tr {
+  border: 1px solid #ddd;
+}
+
+
+.user-table td, .unapprovedUser-table td {
+  padding: 8px;
+}
+
+
+.user-link, .user-text,.user-paragraph {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-link:hover, .user-text:hover {
+  text-decoration: underline;
+  color: #5fcf80;
+}
+
+.user-table th, .unapprovedUser-table th{
+  height: 50px; /
+}
+
+.user-table th, .user-table td {
+  width: 30.00%;
+
+}
+
+.unapprovedUser-table-container {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 20px;
+  overflow-x: auto;
+  margin-right: 200px;
+  margin-left: 200px;
+}
+.unapprovedUser-table th{
+  width: 20.00%;
+
+}
 
 
 
+
+
+/*  updateUser.html */
 
 .profile-container -update {
     display: flex;
@@ -27,6 +211,7 @@
     margin-right: 20px;
 }
 
+
 .profile-container {
     display: flow;
     flex-direction: column;
@@ -34,6 +219,7 @@
     margin-right: 0px;
     margin-left: 150px;
 }
+
 
 .update-view {
     display: flex;
@@ -49,6 +235,111 @@
     margin-left: 100px;
 }
 
+
+.delete-profile-button {
+  display: block;
+  margin-right: 1300px;
+  margin-left: 100px;
+  padding: 8px 12px;
+  background-color: #5fcf80;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+
+.update{
+  margin-left: 300px;
+}
+
+
+
+
+
+.update-profile-button {
+  display: block;
+  margin-right: 20px;
+  margin-left: 0px;
+  padding: 8px 12px;
+  background-color: #5fcf80;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+form.update {
+  max-width: 400px;
+  margin: auto;
+  margin-top: 0px;
+}
+
+
+form.update input[type="text"],
+form.update input[type="password"],
+form.update input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+
+form.update button.update-profile-button {
+  background-color:  #5fcf80;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+}
+
+
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+
+form.update label {
+  display:flex;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+
+
+#delete{
+  margin-left: 20px;
+}
+
+
+
+
+
+
+
+/* profile.html */
+.profile-container {
+  display: flow;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 0px;
+  margin-left: 150px;
+}
+
+.profile-div{
+    margin-right: 0px;
+    margin-left: 100px;
+}
+
+
 .profile-image {
     width: 150px;
     height: 150px;
@@ -62,7 +353,7 @@
 
 .edit-profile-button {
     display: block;
-    margin-right: 1250px;
+    margin-right: 1300px;
     padding: 8px 12px;
     background-color: #5fcf80;
     color: #fff;
@@ -70,10 +361,11 @@
     border-radius: 4px;
 }
 
+
 .delete-profile-button {
     display: block;
-    margin-right: 1300px;
-    margin-left: 100px;
+    margin-right: 1250px;
+    margin-left: 150px;
     padding: 8px 12px;
     background-color: #5fcf80;
     color: #fff;
@@ -89,6 +381,99 @@
     margin-top: 20px;
     color: #888;
 }
+
+
+
+.profile-container,
+.my-courses {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 20px;
+}
+
+.my-courses{
+
+  margin-top: 100px;
+}
+
+
+
+
+/* submission.html */
+/* Basic styling for the submission section */
+.submission-section {
+    margin-bottom: 20px;
+    margin-left: 50px;
+}
+
+
+/* Styling for the course title link */
+.lecture-title {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+/* Styling for the submission table */
+.submission-table {
+    width: 80%; /* Adjust the width as per your preference */
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* Styling for table headers */
+.submission-table th {
+    background-color: #f2f2f2;
+
+    text-align: left;
+}
+
+/* Styling for table cells */
+
+.submission-table td, .submission-table th {
+    padding: 6px; /* Adjust the padding as per your preference */
+}
+/* Styling for the view solution button */
+.view-solution-btn {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #5fcf80;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+/* Styling for the grade form */
+
+.grade-form {
+    display: flex;
+    align-items: center;
+}
+
+/* Styling for grade input and submit button */
+.grade-form input[type="text"] {
+    padding: 4px; /* Adjust the padding as per your preference */
+    width: 50px; /* Adjust the width as per your preference */
+    margin-right: 5px;
+}
+
+
+.grade-form button {
+    padding: 4px 8px;
+    background-color: #5fcf80;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+
+
+
+
+/* login.html & register.html */
 
 
 .form {

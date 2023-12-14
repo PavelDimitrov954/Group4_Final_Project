@@ -8,36 +8,40 @@
 <section>
 
 </section>
+<div class="grade-view">
+    <div class="grade-view-image" >
+
+        <img  th:src="${#strings.isEmpty(responseUser.imageURL) ? '/assets/img/profile.jpg' : responseUser.imageURL}"
+              alt="User Image" class="profile-image-update"/>
+    </div>
+    &emsp;
+    <h2 class="edit" th:text="${responseUser.firstName + ' ' + responseUser.lastName}"></h2>
 
 
-
-<div class="profile-container">
-
-    <img th:src="${#strings.isEmpty(user.imageURL) ? '/assets/img/profile.jpg' : user.imageURL}"
-         alt="User Image" class="profile-image"/>
+</div>
 <br/>
-    <br/>
 
-    <h2 th:text="${user.firstName + ' ' + user.lastName}"></h2>
 
-    <br/>
-    <a th:href="@{/users/{id}/update (id =${responseUser.id})}" class="edit-profile-button">Edit Profile</a>
+<div class="profile-div">
+<a th:href="@{/users/{id}/update (id =${responseUser.id})}" class="edit-profile-button">Edit Profile</a>
 
     <br/>
 
-    <div th:if="${#lists.size(courses) > 0}">
-        <h3>Courses:</h3>
+    <div   th:if="${#lists.size(courses) > 0}">
+        <h3 >My courses:</h3>
         <ul>
 
-            <li th:each="course : ${courses}" th:text="${course.title}"></li>
+            <a class="user-text" th:href="@{/courses/{courseId}/details (courseId =${course.courseId})}" th:each="course : ${courses}" th:text="${course.title}"></a>
         </ul>
     </div>
+
     <div th:unless="${#lists.size(courses) > 0}">
         <p>You don't have any courses yet.</p>
     </div>
 
 
-
 </div>
+<br/>
+
 </body>
 </html>

@@ -8,50 +8,118 @@
 
 <section>
 
+
+
 </section>
-<div class="masthead">
-    <form action="#" method="get" th:action="@{/users/view}" th:object="${filterOptions}">
+
+
+<div>
+<div class="user-search-container">
+    <form action="#" method="get" th:action="@{/users/view}" th:object="${filterOptions}" class="filter-form">
         <label th:text="${'Filter Options'}">Filter Users</label>
         <br/><br/>
 
-        <div class="form-row">
-            <input  class="form-control mb-2" placeholder="First name" th:field="*{firstName}" type="text"/>
 
+        <div class="filter-inputs">
+            <input placeholder="First name" th:field="*{firstName}" type="text" class="filter-input" />
 
-            <input class="form-control mb-2" placeholder="Last Name" th:field="*{lastName}" type="text"/>
+            <input placeholder="Last Name" th:field="*{lastName}" type="text" class="filter-input" />
 
-            <input class="form-control mb-2" placeholder="email" th:field="*{email}" type="text"/>
-
-
+            <input placeholder="Email" th:field="*{email}" type="text" class="filter-input" />
         </div>
 
-        <input type="submit"  class="btn btn-primary mb-2" value="Search"/>
+        <br/>
+        <input type="submit" value="Search" class="submit-button" />
     </form>
+</div>
+    <br/>
+    <br/>
+
+    <div th:if="${responseUser.getRoles().contains(admin)}">
 
 
-    <div th:unless="${users.isEmpty()}">
-        <h2 th:text="${'All Users'}">All Users</h2>
+        <div th:unless="${usersUnapproved.isEmpty()}" class="user-list">
+            <label class="unapproved-text" th:text="${'Unapproved teacher'}">All Users</label>
+            <div     class="unapprovedUser-table-container">
+                <table class="unapprovedUser-table">
+                    <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                        <th>Approved teaver</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${usersUnapproved}">
+                        <td>
+                            <p href="#"  th:text="${user.firstName}" class="user-paragraph">First name</p>
+                        </td>
+                        <td>
+                            <p  href="#"  th:text="${user.lastName}" class="user-paragraph">Last name</p>
+                        </td>
+                        <td>
+                            <a href="#"  th:href="@{/users/{id}/update (id=${user.id})}" th:text="${user.email}" class="user-text">Email</a>
 
-        <div class="form-row">
-            <div class="header">
-                <div class="cell" th:text="${'First name'}">First name</div>
-                <div class="cell" th:text="${'Last Name'}">Last name</div>
-                <div class="cell" th:text="${'Email'}">Email</div>
-            </div>
-            <div class="row" th:each="user : ${users}">
-                <div class="cell">
-                    <a href="#" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName}">First name</a>
-                </div>
-                <div class="cell">
-                    <p  href="#" th:href="@{/admin/{id}(id=${user.id})}" th:text="${user.lastName}">Last name</p>
-                </div>
-                <div class="cell">
-                    <p  href="#" th:href="@{/admin/{id}(id=${user.id})}" th:text="${user.email}">Email</p>
-                </div>
+                        </td>
+                        <td>
+                            <a href="#" th:href="@{/users/{id}/approved (id=${user.id})}" th:text='approved' class="user-paragraph">First name</a>
+                        </td>
+                        <td>
+                            <a  href="#" th:href="@{/users/{id}/delete (id=${user.id})}" th:text='delete' class="user-paragraph">Last name</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
+<div th:unless="${users.isEmpty()}" class="user-list">
+    <!--<h2  th:text="${'All Users'}">All Users</h2>-->
+
+    <div class="user-table-container">
+        <table class="user-table">
+            <thead>
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th th:if="${#lists.contains(responseUser.roles, admin)}" >Make admin</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td>
+                    <p href="#" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName}" class="user-paragraph">First name</p>
+                </td>
+                <td>
+                    <p  href="#" th:href="@{/admin/{id}(id=${user.id})}" th:text="${user.lastName}" class="user-paragraph">Last name</p>
+                </td>
+                <td>
+                   <!-- <a href="#" th:if="${#lists.contains(responseUser.roles, admin)}" th:href="@{/users/{id}/update (id=${user.id})}" th:text="${user.email}" class="user-text">Email</a>-->
+                    <p href="#"  th:text="${user.email}" class="user-paragraph">Email</p>
+                </td>
+
+               <div th:if="${#lists.contains(responseUser.roles, admin)}">
+                <td >
+                    <a href="#" th:if="${#lists.contains(responseUser.roles, admin) && #lists.contains(user.roles, teacher) }" th:href="@{/users/{id}/makeAdmin(id=${user.id})}"  class="user-text">Make admin</a>
+
+                </td>
+               </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+</div>
+<br/>
+<section>
+
+</section>
+
+
 
 </body>
 </html>

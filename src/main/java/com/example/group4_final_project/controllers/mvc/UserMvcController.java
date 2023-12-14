@@ -76,7 +76,7 @@ public class UserMvcController {
     }
     @ModelAttribute("admin")
     public Role RoleAdmin() {
-        return roleRepository.findByRoleName(RoleName.STUDENT);
+        return roleRepository.findByRoleName(RoleName.ADMIN);
 
     }
 
@@ -90,6 +90,8 @@ public class UserMvcController {
         return "profile";
 
     }
+
+
 
     @GetMapping("/{id}/update")
     public String updateUser(Model model, @PathVariable int id, HttpSession session) {
@@ -136,10 +138,17 @@ public class UserMvcController {
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable int id, HttpSession session) {
         try {
-            User user = authenticationHelper.tryGetCurrentUser(session);
-             userService.delete(id,user);
-            session.removeAttribute("currentUser");
-            return "redirect:/";
+            User loginUser = authenticationHelper.tryGetCurrentUser(session);
+
+             if(loginUser.getId()==id){
+                 userService.delete(id,loginUser);
+                 session.removeAttribute("currentUser");
+                 return "redirect:/";
+             }
+            userService.delete(id,loginUser);
+             return "redirect:/users/search";
+
+
 
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -169,7 +178,7 @@ public class UserMvcController {
             User admin = authenticationHelper.tryGetCurrentUser(session);
 
             userService.makeUserAdmin(admin, id);
-            return "redirect:/users/{id}";
+            return "redirect:/users/search";
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -188,6 +197,8 @@ public class UserMvcController {
 
                 model.addAttribute("filterOptions", filterDtoUser);
                 model.addAttribute("users", new ArrayList<ResponseUser>());
+                model.addAttribute("usersUnapproved", userService.getUnapprovedTeacher());
+
                 return "search";
 
 
@@ -214,6 +225,7 @@ public class UserMvcController {
             List<ResponseUser> users = userService.get(filterOptionsUser,user);
             model.addAttribute("filterOptions", filterDtoUser);
             model.addAttribute("users", users);
+            model.addAttribute("usersUnapproved", userService.getUnapprovedTeacher());
             return "search";
 
 
@@ -227,24 +239,20 @@ public class UserMvcController {
 
 
     }
-
-    @GetMapping("/submission")
-    public String studentSubmission(Model model,
-                              HttpSession session) {
+    @GetMapping("/{id}/approved")
+    public String approveTeacher(@PathVariable int id, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
-            List<SubmissionDto>  submissionDtoList = userService.getStudentSubmission(user);
-            model.addAttribute("submission",submissionDtoList );
+            userService.approvedTeacher(id,user);
 
-            return "submission";
+            return "redirect:/users/search";
 
         } catch (AuthorizationException e) {
-            return "redirect:/auth/login";
-        }
-        catch (UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
 
 
     }
+
+
 }

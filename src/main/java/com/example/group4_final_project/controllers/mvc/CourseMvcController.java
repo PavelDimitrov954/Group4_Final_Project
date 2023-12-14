@@ -1,7 +1,9 @@
 package com.example.group4_final_project.controllers.mvc;
 
 import com.example.group4_final_project.exceptions.AuthorizationException;
+import com.example.group4_final_project.exceptions.EntityDuplicateException;
 import com.example.group4_final_project.exceptions.EntityNotFoundException;
+import com.example.group4_final_project.exceptions.UnauthorizedOperationException;
 import com.example.group4_final_project.helpers.AuthenticationHelper;
 import com.example.group4_final_project.helpers.UserMapper;
 import com.example.group4_final_project.models.DTOs.*;
@@ -12,10 +14,12 @@ import com.example.group4_final_project.models.models.User;
 import com.example.group4_final_project.repositories.RoleRepository;
 import com.example.group4_final_project.services.contracts.*;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -83,9 +87,10 @@ public class CourseMvcController {
 
     @ModelAttribute("admin")
     public Role RoleAdmin() {
-        return roleRepository.findByRoleName(RoleName.STUDENT);
+        return roleRepository.findByRoleName(RoleName.ADMIN);
 
     }
+
 
     @GetMapping("/courses")
     public String showCoursePage(@ModelAttribute("filterOptions") FilterDtoCourse filterDtoCourse, HttpSession session, Model model) {
@@ -186,6 +191,7 @@ public class CourseMvcController {
     }
 
 
+
     @PostMapping("/lectures/{lectureId}/upload")
     public String uploadAssignment(@PathVariable Integer lectureId, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, HttpSession session) {
         try {
@@ -247,4 +253,53 @@ public class CourseMvcController {
         String redirect = String.format("redirect:/courses/%s/details", id);
         return redirect;
     }
+
+
+
+
+    @GetMapping("/lecture/submission")
+    public String studentSubmission(Model model,
+                                    HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            List<SubmissionDto>  submissionDtoList = submissionService.getStudentSubmission(user);
+            model.addAttribute("submissionList",submissionDtoList );
+            model.addAttribute("submissionDto",new SubmissionUpdateDto() );
+
+            return "submission";
+
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+
+    }
+
+
+    @PostMapping("/lecture/submission/{id}/update")
+    public String updateUser(@Valid @ModelAttribute("submissionDto") SubmissionUpdateDto submissionUpdateDto, BindingResult bindingResult, @PathVariable int id,
+                             HttpSession session) {
+
+        if (bindingResult.hasErrors()) {
+            return "/submission";
+        }
+
+
+        try {
+
+            User user =  authenticationHelper.tryGetCurrentUser(session);
+            submissionService.update(id,user,submissionUpdateDto);
+
+            return "redirect:/lecture/submission";
+
+
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("username", "username_error", e.getMessage());
+            return "updateUser";
+        }
+    }
+
 }

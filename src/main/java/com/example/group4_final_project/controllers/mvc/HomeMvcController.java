@@ -69,7 +69,7 @@ public class HomeMvcController {
     }
     @ModelAttribute("admin")
     public Role RoleAdmin() {
-        return roleRepository.findByRoleName(RoleName.STUDENT);
+        return roleRepository.findByRoleName(RoleName.ADMIN);
 
     }
 

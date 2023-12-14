@@ -11,6 +11,7 @@
     <img  th:src="${#strings.isEmpty(responseUser.imageURL) ? '/assets/img/profile.jpg' : responseUser.imageURL}"
          alt="User Image" class="profile-image-update"/>
 </div>
+    &emsp;
   <h2 class="edit" th:text="${responseUser.firstName + ' ' + responseUser.lastName}"></h2>
 
 

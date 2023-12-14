@@ -35,7 +35,9 @@ public interface UserService {
 
     void makeUserAdmin(User admin, int id);
 
-    List<SubmissionDto> getStudentSubmission(User user);
+
     boolean isTeacher(User user);
     boolean isStudent(User user);
+
+    List<ResponseUser> getUnapprovedTeacher();
 }

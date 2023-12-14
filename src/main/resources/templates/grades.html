@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<form th:replace="~{index.html :: head('Register')}"></form>
+<form th:replace="~{index.html :: head('Grades')}"></form>
 <body>
 <form th:replace="~{index.html::header}"></form>
 <section>
 
 </section>
+<div class="grade-view">
+    <div class="grade-view-image" >
 
-<h2>Grades</h2>
+        <img  th:src="${#strings.isEmpty(responseUser.imageURL) ? '/assets/img/profile.jpg' : responseUser.imageURL}"
+              alt="User Image" class="profile-image-update"/>
+    </div>
+    &emsp;
+    <h2 class="edit" th:text="${responseUser.firstName + ' ' + responseUser.lastName}"></h2>
 
-<div th:each="gradeDto : ${grades}">
-    <p th:text="${gradeDto.courseTitle}"></p>
 
+</div>
+<section>
 
+</section>
+<div class="grades-table" th:each="gradeDto : ${grades}">
+    <a class="user-text"
+       th:href="@{/courses/{courseId}/details (courseId =${gradeDto.getCourse().courseId})}"
+       th:text="${gradeDto.getCourse().title}"></a>
+
+    <table class="grades small">
+        <thead>
         <tr>
-            <th>Lecture</th>
+            <th>Lecture Name</th>
             <th>Grade</th>
-            <br/>
         </tr>
-
+        </thead>
+        <tbody>
         <tr th:each="entry : ${gradeDto.grades}">
             <td th:text="${entry.key.title}"></td>
-            <td th:text="${entry.value}"></td>
+            <td th:if="${entry.value!=null}" th:text="${entry.value} + '%'"></td>
+            <td th:unless="${entry.value!=null}" th:text="'---'"></td>
         </tr>
+        </tbody>
+    </table>
 
-    <br/>
+    <div class="average-grade-container">
+        <p class="average-grade" th:text="'Average Grade for Course: '"></p>
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        <p class="average-grade" th:text=" ${gradeDto.abvGrade} +'%'"></p>
+    </div>
 
-
-    <p th:text="'Average Grade: ' + ${gradeDto.abvGrade}"></p>
     <hr/>
 </div>
 

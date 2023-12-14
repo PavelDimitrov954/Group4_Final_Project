@@ -26,7 +26,7 @@ public class AssignmentHelper {
         ));
     }
 
-   /* public String uploadAssignment(MultipartFile assignmentFile) throws IOException {
+    public String uploadAssignment(MultipartFile assignmentFile) throws IOException {
         File tempFile = File.createTempFile("tempAssignment", ".txt");
         assignmentFile.transferTo(tempFile);
 
@@ -42,8 +42,8 @@ public class AssignmentHelper {
 
         return uploadResult.get("url").toString();
     }
-}*/
-   public String uploadAssignment(MultipartFile assignmentFile) throws IOException {
+}
+   /*public String uploadAssignment(MultipartFile assignmentFile) throws IOException {
        File tempFile = File.createTempFile("tempAssignment", ".txt");
        assignmentFile.transferTo(tempFile);
 
@@ -63,5 +63,4 @@ public class AssignmentHelper {
        String cloudinaryUrl = cloudinary.url().resourceType("raw").generate(publicId + "." + format);
 
        return cloudinaryUrl;
-   }
-}
+   }*/

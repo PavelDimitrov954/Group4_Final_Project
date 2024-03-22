@@ -77,13 +77,12 @@ They must be able to modify/delete courses and users, approve administrators and
 
 The REST API provides the following capabilities:
 - **Users**
-    - CRUD operations (must)
-    - Enroll to courses (must)
-    - Search by first, last name or email (must)
+    - CRUD operations 
+    - Enroll to courses 
+    - Search by first, last name or email 
 - **Courses**
-    - CRUD operations (must)
-    - Rate (if implemented) (must)
+    - CRUD operations 
+    - Rate 
 - **Lectures**
-    - CRUD operations (must)
-    - Submit assignment file (must)
-    - Add/Edit user’s notes (if implemented)
+    - CRUD operations
+    - Submit assignment file
